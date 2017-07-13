@@ -1,0 +1,36 @@
+\ProvidesPackage{antropy_en}[2017/15/02 v0.1 ANT Theme lookalike]
+
+% Make a figure from something
+% Parameters:
+%  1 File with Content
+%  2 Label
+%  3 Caption
+%  4 Relative width
+%  5 Placement H or hp
+\newcommand{\figurizefile}[5] {
+  \begin{figure}[#5]
+    \centering
+    \resizebox{#4\textwidth}{!}{\input{#1}}
+    \caption{#3}
+    \label{#2}
+  \end{figure}
+}
+
+% Environment for top level chapters
+% Parameter:
+%  Name des Kapitels
+\newenvironment{topchapter}[1] {
+  \newpage
+  \section{#1}
+}{
+}
+
+% Environment for subchapters
+\newenvironment{subchapter}[1] {
+  \subsection{#1}
+}{}
+
+% Environment for subsubchapters
+\newenvironment{subsubchapter}[1] {
+  \subsubsection{#1}
+}{}
