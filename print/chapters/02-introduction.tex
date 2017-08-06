@@ -33,18 +33,46 @@
                   {Eye diagram}
                   {0.7}{H}
 
+  A phenomenom that is quite common in terristrial communications
+  is multipath propagation.
+  What this means is that a signal that was transmitted once reaches the
+  receiver multiple times delayed by different amounts of time.
 
+  Figure \ref{img:multipath} shows an example of a scenario where
+  multipath propagation is happening.
+  The Transmitter does not have a direct line of sight to the receiver,
+  so signals that reach the receiver did so by being reflected
+  on objects.
+
+  In the depicted scenario there are two paths by which signals from
+  the transmitter can reach the receiver.
+  The path in which the signal is reflected by the object on
+  the top is longer than the other path, this means the signal will
+  be delayed longer and damped more.
 
   \figurizefile{diagrams/multipath.tex}
                {img:multipath}
                {A Multipath scenario without a direct line of sight}
                {0.5}{H}
 
+  Figure \ref{img:eye_diagram_multipath} shows the effect of the
+  two signals superimposing on one another.
+  The signal that follows the longer transmission path
+  is delayed by $0.9$ symbol durations and has a magnitude
+  of $\SI{10}{\percent}$, $\SI{30}{\percent}$, $\SI{50}{\percent}$ and
+  $\SI{70}{\percent}$ of the original signal amplitude.
+
+  % TODO: Phasendrehung und alles ist gar nicht beachtet
   \figurizefile{diagrams/eye_diagram_multipath.tex}
                {img:eye_diagram_multipath}
                {Eye diagrams}
                {0.9}{H}
 
+  With increasing amplitude of the reflected signal the decoding
+  and clock recovery become more and more difficult.
+  To reduce the effects of multipath propagation one can
+  increase the symbol durations, but this will in turn
+  reduce the data rate, limiting the data throughput.
 
 \end{subchapter}
 
