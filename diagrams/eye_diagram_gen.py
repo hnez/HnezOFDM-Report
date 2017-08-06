@@ -33,7 +33,7 @@ for i in range(20):
 for tgt in target:
     plt.plot(
         np.linspace(0, 0.1, len(tgt)),
-        tgt, 'k'
+        tgt, 'b'
     )
 
 plt.axvline(x=0.05,  linewidth=0.7)

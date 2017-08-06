@@ -47,7 +47,7 @@ for (delay, mag) in MPDELAYS:
         ax.plot(
             np.linspace(0, 0.1, len(tgt)),
             tgt,
-            'k'
+            'b'
         )
 
     canvas.print_pdf('eye_diagram_multipath_{}_{}m.pdf'.format(delay,int(mag*1000)))
