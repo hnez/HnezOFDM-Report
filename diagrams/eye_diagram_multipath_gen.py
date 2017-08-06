@@ -25,6 +25,8 @@ for (delay, mag) in MPDELAYS:
     canvas= FigureCanvas(fig)
     ax= fig.add_subplot('111')
 
+    ax.set_title('Δt={}T, a={}'.format(delay/SAMP_RATE, mag))
+
     target= list()
 
     for i in range(64):
@@ -36,6 +38,7 @@ for (delay, mag) in MPDELAYS:
         end=  (len(full) + 3*SAMP_RATE)//2
 
         full[:-delay]+= mag * full[delay:]
+        full/= 1 + mag
 
         crop= full[start:end]
 
