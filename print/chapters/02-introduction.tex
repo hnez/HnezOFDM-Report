@@ -14,15 +14,37 @@
                {\acrshort{qam4} modulated symbols over time in the complex domain}
                {1}{H}
 
+  Clock recovery and synchronizing to a continious stream of
+  symbols are, at least in theory, straightforward.
+
+  When only one of the complex components (real- or imaginary part)
+  is observed, as shown in figure \ref{img:eye_diagram}, one can
+  immidiately guess the optimal sampling time, indicated by the
+  vertical line in the middle of the plot.
+  The optimal sampling time can be found by observing the
+  zero-crossings of the signal which have to happen half a
+  sybol period after the sampling.
+
+  In low noise situations, as shown in \ref{img:eye_diagram},
+  the modulated digital signal can be perfectly reconstructed.
+
   \figurizegraphic{diagrams/eye_diagram.pdf}
                   {img:eye_diagram}
                   {Eye diagram}
                   {0.7}{H}
 
+
+
   \figurizefile{diagrams/multipath.tex}
                {img:multipath}
                {A Multipath scenario without a direct line of sight}
                {0.5}{H}
+
+  \figurizefile{diagrams/eye_diagram_multipath.tex}
+               {img:eye_diagram_multipath}
+               {Eye diagrams}
+               {0.9}{H}
+
 
 \end{subchapter}
 
