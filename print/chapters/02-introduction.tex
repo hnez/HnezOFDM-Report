@@ -1,8 +1,23 @@
 \begin{subchapter}{Single carrier transmision}
-  \figurizefile{diagrams/qam4_symbol.tex}
-               {img:qam4_symbol}
-               {A QAM modulated symbol in the complex domain}
+  A classic digital transmission standard will usually map
+  digital bits to complex symbols and will modulate these
+  symbols at a fixed rate onto a single carrier frequency. \\
+
+  An example of six \acrshort{qam4} symbols that are transmitted
+  in equal time intervals can be seen in figure \ref{img:qam4_symbol_time}.
+  The Symbols are shown in the complex baseband domain and the
+  hypothetical filter is constructed such, that the signal
+  phase is interpolated linearily between symbols.
+
+  \figurizefile{diagrams/qam4_symbol_time.tex}
+               {img:qam4_symbol_time}
+               {\acrshort{qam4} modulated symbols over time in the complex domain}
                {1}{H}
+
+  \figurizegraphic{diagrams/eye_diagram.pdf}
+                  {img:eye_diagram}
+                  {Eye diagram}
+                  {0.7}{H}
 
   \figurizefile{diagrams/multipath.tex}
                {img:multipath}
