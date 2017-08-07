@@ -73,9 +73,26 @@
   To reduce the effects of multipath propagation one can
   increase the symbol durations, but this will in turn
   reduce the data rate, limiting the data throughput.
-
 \end{subchapter}
 
 \begin{subchapter}{Multicarrier transmision}
+  As was already hinted at in the previous chapter a reduction
+  in symbol rate does help mitigating the negative effects of
+  multi-path propagation but does also reduce the possible datarate.
+
+  Figure \ref{TODO} shows that halving the symbol rate also
+  halves the width of the signal in the frequency domain,
+  meaning that one could now fit two half-datarate modulated carriers in the
+  same bandwidth previously occupied by one.
+
+  As figure \ref{TODO} shows power from one carrier might leak
+  into the other carrier, depending on the signal waveform and
+  carrier spacing. Such \gls{isi} can be prevented by desiging
+  the carriers to be orthogonal.
+
+  A straightforward scheme to generate multiple orthogonal
+  carriers uses the \gls{ifft} to generate the time domain
+  signals, as shown in figure \ref{TODO}.
+  This scheme is also known as \acrlong{ofdm}.
 
 \end{subchapter}
