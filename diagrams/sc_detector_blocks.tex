@@ -1,0 +1,31 @@
+\begin{tikzpicture}
+  \draw
+  (0, 5) to[short, *-*]
+  ++(2, 0) coordinate(mulsplit) to[short]
+  ++(0, -1.5) to[twoport, t=$\bm{z}^{-\frac{N}{2}}$]
+  ++(2, 0) to[twoport, t=$\bm{x}^{\ast}$]
+  ++(1.5, 0) coordinate(conjout);
+
+  \draw
+  (mulsplit) to[short]
+  ++(4, 0) node[mixer, anchor=west](multiply){};
+
+  \draw
+  (conjout) to[short]
+  ++(1, 0) to[short] (multiply.2);
+
+  \draw
+  (multiply.3) to[short]
+  ++(0.5, 0) node (maout) [minimum width=10mm, minimum height=10mm, anchor=west, draw=black, line width=0.25mm, align=center]{\small{moving}\\\small{average}}
+  (maout.east) to[short, -*]
+  ++(0.5, 0) coordinate(maoutsplit);
+
+  \draw
+  (maoutsplit) to[twoport, t=$\arg{x}$, -*]
+  ++(2, 0) node[anchor=west, align=left]{\Delta f\\estimation};
+
+  \draw
+  (maoutsplit) to[short]
+  ++(0, -1.5) to[twoport, t=$\left|x\right|$, -*]
+  ++(2, 0) node[anchor=west, align=left]{preamble\\detection};
+\end{tikzpicture}

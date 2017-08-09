@@ -99,16 +99,101 @@
 \end{subchapter}
 
 \begin{subchapter}{Cyclic prefix}
+  So far we learned that \gls{ofdm} is modulation scheme
+  that is useful to transfer high datarates over channels
+  where multipath propagation would limit the throughput of
+  a single-carrier scheme. \\
+
+  There are however still some issues to consider when using
+  \gls{ofdm} over a multipath channel. \\
+
+  If one were to just sequentially output the \acrshort{ofdm}-symbols
+  generated in the previous chapter one would encounter multipath-effects
+  as shown in figure \ref{img:ofdm_multipath}.
+  In the diagram the \acrshort{ofdm} symbols $-7$ to $0$ are received
+  over two paths of different length.
+  At the receiver the two signals will add up leading to interference
+  between adjacent symbols.
+
   \figurizefile{diagrams/ofdm_multipath.tex}
                {img:ofdm_multipath}
-               {OFDM multipath without guard interval}
+               {\acrshort{ofdm} multipath without guard interval}
                {0.7}{H}
+
+  To prevent interference between symbols a guard interval has
+  to be introduced between symbols, as shown in figure \ref{img:ofdm_multipath}.
+  The length of the guard interval has to be designed according to
+  the targeted scenario. It should usually be at least as long as the
+  impulse response of the targeted channel.
+  Which in terms of multipath propagation is the time difference between
+  the signal being received over the shortest path and over the longest path.
 
   \figurizefile{diagrams/ofdm_multipath_cp.tex}
                {img:ofdm_multipath}
-               {OFDM multipath with guard interval}
+               {\acrshort{ofdm} multipath with guard interval}
                {0.7}{H}
+
+  Due to the cyclic nature of the \gls{fft} the guard interval
+  is often filled with the last samples of the following \gls{ofdm}
+  symbol. Guard intervals generated in this manner are called
+  \gls{cycpf}.
 \end{subchapter}
 
 \begin{subchapter}{Schidl \& Cox Synchronization}
+  Synchronization to a datastream in a single-carrier scheme
+  could be performed as easily as observing zero-crossings in the
+  timedomain to detect symbol transitions.
+  In a multi-carrier system the raw samples are not available
+  at the receiver prior to fourier-transformation to the
+  frequency domain, thus synchronization has to be performed
+  differently. \\
+
+  One method to synchronize a receiver to a continuous stream
+  of \gls{ofdm}-symbols is the introduction of null-symbols,
+  \gls{ofdm}-symbols where the signal power is zero for the
+  symbol duration.
+
+  An example of such a symbol stream is shown in figure
+  \ref{img:ofdm_zero_power_sync}.
+  To synchronize to the symbol stream the receiver has
+  to monitor the received input power for dips with a
+  length of one symbol duration. \\
+
+  This synchronization scheme is for example used in
+  the \acrshort{dabplus} audio broadcasting standard.
+
+  \figurizefile{diagrams/ofdm_zero_power_sync.tex}
+               {img:ofdm_zero_power_sync}
+               {\acrshort{ofdm} Synchronization using a null symbol}
+               {0.7}{H}
+
+  While being easy to implement this method does however
+  have some drawbacks.
+  For one it is not well suited for burst transfers,
+  where the signal power of a received burst is not
+  known a priori, complicating the selection of threshold
+  values.
+  Secondly it does not allow the receiver to estimate the
+  frequency offset between its carrier and the carrier of the
+  transmitter, a previously undiscussed topic, that is
+  for example important when the receiver and transmitter
+  are moving relative to one another, due to the resulting doppler
+  shift in frequency. \\
+
+  The gist of how a Schmidl \& Cox synchronization sequence
+  is introduced into a stream of \gls{ofdm}-symbols is
+  demonstrated in figure \ref{img:ofdm_sc_sync}.
+
+  The Schmidl \& Cox sequence consists of a complex sequence
+  of half the symbol length that is sent twice, back to back.
+
+  \figurizefile{diagrams/ofdm_sc_sync.tex}
+               {img:ofdm_sc_sync}
+               {\acrshort{ofdm} Synchronization using a Schmidl \& Cox symbol}
+               {0.7}{H}
+
+  \figurizefile{diagrams/sc_detector_blocks.tex}
+               {img:sc_detector_blocks}
+               {Schmidl \& Cox detector block diagram}
+               {0.7}{H}
 \end{subchapter}
