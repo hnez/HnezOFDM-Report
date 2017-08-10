@@ -3,9 +3,22 @@ tools that are useful for building and simulating radio systems.
 This chapter presents the anatomy of a GNURadio module.
 
 \begin{subchapter}{GNURadio Companion}
+  The first point of contact for most new GNURadio users
+  is usually the \gls{grc}, a program that lets
+  users design signal flowgraphs in a graphical way.
+  \Gls{grc}'s main interface is shown in figure
+  \ref{img:annotated_gnuradio_companion}, the flowgraph
+  is an implementation of the \acrlong{schcox} detector block-diagram
+  shown in figure \ref{img:sc_detector_blocks} in the previous
+  chapter.
+
   \figurizefile{diagrams/annotated_gnuradio_companion.tex}
                {img:annotated_gnuradio_companion}
-               {The GNURadio companion}
+               {The \acrlong{grc}}
                {1}{H}
 
+  \figurizegraphic{images/gnuradio_gui.png}
+                  {img:gnuradio_gui}
+                  {The graphical output of a running flowgraph}
+                  {0.85}{H}
 \end{subchapter}
