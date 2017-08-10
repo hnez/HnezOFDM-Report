@@ -185,25 +185,110 @@
   demonstrated in figure \ref{img:ofdm_sc_sync}.
 
   The Schmidl \& Cox sequence consists of a complex sequence
-  of half the symbol length that is sent twice, back to back.
+  of half a symbol length that is sent twice, back to back,
+  as shown in figure \ref{img:ofdm_sc_sync}.
 
   \figurizefile{diagrams/ofdm_sc_sync.tex}
                {img:ofdm_sc_sync}
                {\acrshort{ofdm} Synchronization using a Schmidl \& Cox symbol}
                {0.7}{H}
 
+  The detection of the repeated sequence at the receiver works by delaying
+  the input stream by half a symbol length, performing a complex conjuate
+  multiplication with the original stream and averaging over a window with
+  a length of half a symbol.
+  A block diagram of this process is shown in figure
+  \ref{img:sc_detector_blocks}.
+
   \figurizefile{diagrams/sc_detector_blocks.tex}
                {img:sc_detector_blocks}
                {Schmidl \& Cox detector block diagram}
                {0.7}{H}
 
+  Figure \ref{img:sc_detector_output_nooff} gives an intuition
+  of what the output stream of this processing chain looks like
+  when a synchronization sequence is received. \\
+
+  The simulation consists of a \gls{schcox} sequence
+  that is constructed from two halves of $512$ random samples
+  and a $128$ samples long \acrlong{cycpf}.
+  The signal is overlayed with \acrlong{awgn}.
+  The \gls{snr} is $\SI{0}{\deci\bel}$.
+
+  The left plot shows the absoulte output value of
+  the moving average, while the right plot shows its phase.
+
+  The absolute value follows a trapezoidal waveform.
+  Before and after the synchronization sequence is received
+  the value is nearly zero, as the result of the complex
+  conjugate multiplication of the input and its delayed version
+  being randomly distributed, leading to it being canceled out
+  in the averaging step.
+
   \figurizefile{diagrams/sc_detector_output_nooff.tex}
                {img:sc_detector_output_nooff}
-               {TODO}
+               {\acrshort{schcox} output $\abs{x}$ and $\arg{x}$ ($\Delta f=0$)}
                {0.9}{H}
+
+  The conditions leading to the peak in the plot are best
+  described in equation \ref{sc_peak}.
+  Where $x$ is the received signal, consisting of the
+  random noise component $n$ and the synchronization sequence $s$,
+  and the sum represents the moving average in the block diagram,
+  which is performed over half a symbol length $N$. \\
+
+  As the synchronization sequence is repeated after $N/2$ samples
+  $s_{i-N/2}$ is equal to $s_{i}$ and as $n$ is randomly distributed
+  its effect will mostly be canceled out by the averaging step. \\
+
+  The linear slopes leading to the peak are a result of the
+  correlating symbols sliding in and out of the averaging
+  window.
+
+  \begin{align}
+    \label{eq:sc_peak}
+    \frac{1}{N/2} \sum_{i=0}^{N/2} x_{i} \cdot x_{i-N/2}^\ast &=
+    \frac{1}{N/2} \sum_{i=0}^{N/2} \left(s_{i} + n_{i} \right) \cdot \left(s_{i-N/2} + n_{i-N/2} \right)^\ast \nonumber \\
+    &= \frac{1}{N/2} \sum_{i=0}^{N/2} \left(s_{i} + n_{i} \right) \cdot \left(s_{i} + n_{i-N/2} \right)^\ast \nonumber \\
+    &\approx \frac{1}{N/2} \sum_{i=0}^{N/2} s_{i} \cdot s_{i}^\ast
+    = \frac{1}{N/2} \sum_{i=0}^{N/2} \abs{s_{i}}^2
+  \end{align}
+
+  If, due to doppler shift or difference in the reference clocks,
+  there is a offset frequency $\Delta f$ superimposed on the
+  synchronization sequence $s'$ where the sampling frequency is $f_s$.
+
+  \begin{equation*}
+    s'_{i}= s_{i} \cdot e^{j\cdot 2 \pi \frac{\Delta f}{f_s}i}
+  \end{equation*}
+
+  The non-noise part of equation \ref{eq:sc_peak} now becomes:
+
+  \begin{align}
+    \label{eq:sc_peak_fqoff}
+    \frac{1}{N/2} \sum_{i=0}^{N/2} s'_{i} \cdot {s'}_{i-N/2}^{\ast}
+    &= \frac{1}{N/2} \sum_{i=0}^{N/2}
+     \left( s_{i} \cdot e^{j\cdot 2 \pi \frac{\Delta f}{f_s}i} \right)
+     \left( s_{i-N/s}^{\ast} \cdot e^{-j\cdot 2 \pi \frac{\Delta f}{f_s} \left( i- \frac{N}{2} \right)} \right) \nonumber \\
+    &= \frac{1}{N/2} \sum_{i=0}^{N/2} s_{i} \cdot s_{i}^\ast \cdot e^{j\cdot 2 \pi \frac{\Delta f}{f_s} \frac{N}{2}} \nonumber \\
+    &= \frac{1}{N/2} \sum_{i=0}^{N/2} \abs{s_{i}}^2 \cdot e^{j\cdot 2 \pi \frac{\Delta f}{f_s} \frac{N}{2}}
+  \end{align}
+
+  Equation \ref{eq:sc_peak_fqoff} shows that the frequency offset between transmitter
+  and receiver can be estimated using the argument $\arg{x}$ of the complex output of the
+  moving average block in figure \ref{img:sc_detector_blocks}.
+
+  \begin{equation*}
+    \arg{x} = 2 \pi \frac{\Delta f}{f_s} \frac{N}{2} \implies \Delta f = \frac{f_s}{N \pi} \arg{x}
+  \end{equation*}
+
+  The magnitude and phase of the output values for a simulation with a
+  frequency offset can be seen in figure \ref{img:sc_detector_output_fqoff}.
+  The for the given frequency offset the magnitude is unaffected but
+  the phase is not zero, as in the example without a frequency offset.
 
   \figurizefile{diagrams/sc_detector_output_fqoff.tex}
                {img:sc_detector_output_fqoff}
-               {TODO}
+               {\acrshort{schcox} output $\abs{x}$ and $\arg{x}$ ($\Delta f \neq 0$)}
                {0.9}{H}
 \end{subchapter}

@@ -17,7 +17,7 @@ def cplx_randn(length):
 
     return mag * np.exp(1j * ph)
 
-signal= 0.9 * cplx_randn(SIGLEN)
+signal= cplx_randn(SIGLEN)
 sc_half_seq= cplx_randn(SCLEN)
 sc_seq= np.concatenate((sc_half_seq[-CPLEN:], sc_half_seq, sc_half_seq))
 
@@ -39,8 +39,10 @@ for (fqname, fqoff) in (('nooff', 0), ('fqoff', 0.01)):
         canvas= FigureCanvas(fig)
         ax= fig.add_subplot('111')
 
+        sl= len(src)
+        
         ax.plot(
-            np.arange(len(src)),
+            np.linspace(-sl/2, sl/2, sl),
             src, 'b'
         )
 
