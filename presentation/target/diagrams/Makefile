@@ -23,6 +23,7 @@ all: ${SVG_FILES}
 	$(file >> $(@),\usepackage{tikz})
 	$(file >> $(@),\usepackage{pgfplots})
 	$(file >> $(@),\usepackage{circuitikz})
+	$(file >> $(@),\usepackage{commath})
 	$(file >> $(@),\usetikzlibrary{shapes,arrows,positioning,calc,fit,patterns,decorations.markings,matrix,3d})
 	$(file >> $(@),\begin{document})
 	$(file >> $(@), \input{$(<)})
