@@ -140,28 +140,104 @@ This chapter presents the anatomy of a GNURadio module.
         the contained flowgraph.
     \end{description}
 
-    \begin{minipage}{\linewidth}
-      \lstinputlisting[numbers=left, basicstyle=\scriptsize,
-                       numbersep=5pt, language=Python,
-                       caption=Using GNURadio from Python,
-                       label=lst:gnuradio_companion_minimal,
-                       captionpos=b]
-                      {listings/gnuradio_companion_minimal.py}
-    \end{minipage}
+    The rest of listing \ref{lst:gnuradio_companion_minimal}
+    performs the equivalent of the flowgraph in figure
+    \ref{img:gnuradio_companion_minimal}.
+
+    Lines \texttt{10} to \texttt{19} create instances of the
+    blocks used in the flowgraph and provide them with the
+    correct parameters like sample rate and frequency.
+
+    Lines \texttt{22} to \texttt{24} create the connections
+    between the blocks that were previously instanciated.
+
+    Lines \texttt{27} to \texttt{31} create an instance of the
+    top block and execute it until the enter key is pressed
+    on the terminal.
+
+    \lstinputlisting[numbers=left, basicstyle=\scriptsize,
+                     numbersep=5pt, language=Python,
+                     caption=Using GNURadio from Python,
+                     label=lst:gnuradio_companion_minimal,
+                     captionpos=b, float]
+                    {listings/gnuradio_companion_minimal.py}
+
   \end{subsubchapter}
 
   \begin{subsubchapter}{C++-Interface}
-    \begin{minipage}{\linewidth}
-      \lstinputlisting[numbers=left, basicstyle=\scriptsize,
-                       numbersep=5pt, language=C++,
-                       caption=A simple custom block in C++,
-                       label=lst:square.cc,
-                       captionpos=b]
-                      {listings/square.cc}
-    \end{minipage}
-  \end{subsubchapter}
-\end{subchapter}
+    Most of GNURadio's backend code is not written in Python
+    but in C++, as it provides lower level access to the computer
+    memory and better computing performance. \\
 
+    A lot of this backend code can be acessed from Python
+    thanks to C++-to-Python wrappers that are automatically
+    generated using the SWIG \cite{swigweb} software tool.
+
+    One example of C++ code for which wrappers are available
+    are the, previously discussed, \texttt{gr.*\_block} block
+    base classes which are actually implemented in C++
+    but can also be used to derive blocks from in python. \\
+
+    Accordingly custom blocks can also be implemented in
+    C++, as demonstrated in listing \ref{lst:square_cc}.
+    The block shown is derived from the \texttt{gr:sync\_block}
+    base class, as can be seen in line \texttt{14}, as
+    such it is bound to produce one output item
+    per input item consumed at its input. \\
+
+    The input (line \texttt{15}) and output (line \texttt{16})
+    signature specifiers specify the number of input and output
+    ports of the block and their type.
+    The simple input signature
+
+    \begin{center}
+      \texttt{gr::io\_signature::make(1, 1, sizeof(float))}
+    \end{center}
+
+    breaks down to: ``This block has at least one input port '\texttt{1,}' and
+    at most one input port '\texttt{1,}' an input item consists of a single real
+    number '\texttt{sizeof(float)}'``.
+
+    Thus the block will have exactly one real-valued input port and exactly
+    one real-valued output port. \\
+
+    \lstinputlisting[numbers=left, basicstyle=\scriptsize,
+                     numbersep=5pt, language=C++,
+                     caption=A simple custom block in C++,
+                     label=lst:square_cc,
+                     captionpos=b, float]
+                    {listings/square.cc}
+
+    The actual signal processing for the demonstrated block
+    is performed in the \texttt{work} method, starting in line
+    \texttt{29}. The work method is passed the following arguments
+    by the underlying GNURadio logic:
+
+    \begin{description}
+      \item[\texttt{noutput\_items}]
+        The number of output items the block should write to the output
+        buffers in this iteration, as this is a sync block this is also
+        the minimum number of input items that are available in the input buffers.
+
+      \item[\texttt{input\_items}]
+        A list of input buffers. In this case the list only contains
+        a single reference to an input buffer as there is only a
+        single input port.
+
+      \item[\texttt{output\_items}]
+        A list of output buffers. Again, in the case at hand,
+        this will only contain a single reference.
+    \end{description}
+  \end{subsubchapter}
+
+  In the \texttt{for}-loop starting in line \texttt{32}
+  every element in the input buffer is squared and written to
+  the corresponding position in the output buffer.
+
+  In line \texttt{36} the number of items that were actually consumed
+  is returned, in this case it is equal to the number of items
+  the method was requested to produce.
+\end{subchapter}
 
 \begin{subchapter}{GNURadio Internals}
 \end{subchapter}
