@@ -1,0 +1,27 @@
+\begin{tikzpicture}
+  \begin{scope}
+    \draw
+    (1, 4) rectangle (9, 5)
+    (1, 5) node[anchor=south west, align=center]{\texttt{0x0000}\\{\color{gray}(\texttt{0x0000})}}
+    (9, 5) node[anchor=south east, align=center]{\texttt{0x0fff}\\{\color{gray}(\texttt{0x0fff})}}
+    (9, 4) rectangle (17, 5)
+    (9, 5) node[anchor=south west, align=center]{\texttt{0x0000}\\{\color{gray}(\texttt{0x1000})}}
+    (17, 5) node[anchor=south east, align=center]{\texttt{0x0fff}\\{\color{gray}(\texttt{0x1fff})}};
+
+    \draw[pattern=north east lines, pattern color=gray]
+    (7.5, 4) rectangle (11.5, 5);
+
+    \draw[pattern=north east lines, pattern color=gray, opacity=0.5]
+    (1, 4) rectangle (3.5, 5);
+
+    \draw[<-]
+    (11.5, 3.95) -- ++(0, -0.5) -- ++(0.5, 0) node[anchor=west]{\texttt{write\_ptr + size}};
+
+    \draw[<-]
+    (7.5, 3.95) -- ++(0, -0.5) -- ++(-0.5, 0) node[anchor=east]{\texttt{write\_ptr}};
+  \end{scope}
+
+  % Sneaky padding
+  \draw[opacity=0]
+  (-2, 3) -- (20, 3);
+\end{tikzpicture}

@@ -340,18 +340,94 @@ This chapter presents the anatomy of a GNURadio module.
                  {Buffer states after ``Signal Source'' was executed}
                  {0.7}{H}
 
+    In the next scheduling round ``Signal Source'' has data
+    available in its input buffer to be processed.
+    Figure \ref{img:gr_round_buffers_c} shows the buffer states
+    after ``Signal Source'' was executed.
+    ``Buffer A'' is completely drained and ``Signal Source'' has
+    written some output items to ``Buffer B''.
+
     \figurizefile{diagrams/gr_round_buffers_c.tex}
                  {img:gr_round_buffers_c}
                  {Buffer states after ``Multiply Const'' was executed}
                  {0.7}{H}
+
+    Once there is data in ``Buffer B'' the ``Null Sink'' block
+    can be scheduled and it consumes all the available input samples.
+    The state of the buffers is shown in figure \ref{img:gr_round_buffers_d}.
 
     \figurizefile{diagrams/gr_round_buffers_d.tex}
                  {img:gr_round_buffers_d}
                  {Buffer states after ``Null Sink'' was executed}
                  {0.7}{H}
 
+    The scheduling decisions in this chapter are choosen to be
+    as illustrative as possible. In an actual flowgraph there are
+    further considerations to be made, like the possibility of scheduling
+    multiple blocks concurrently on machines with multiple \gls{cpu} cores,
+    buffers with multiple readers or multiple block producing data
+    in the same scheduling cycle.
   \end{subsubchapter}
 
   \begin{subsubchapter}{Efficient circular buffers}
+    As hinted at in listing \ref{lst:square_cc}, when a block
+    is asked to fill or read a buffer it is passed a region in
+    that buffer indicated by its starting address and size. \\
+
+    An illustration is shown in figure \ref{img:gr_rb_mmap_a}.
+    The block is asked to write \texttt{size} elements into
+    the buffer, starting at \texttt{write\_ptr}.
+
+    \figurizefile{diagrams/gr_rb_mmap_a.tex}
+                 {img:gr_rb_mmap_a}
+                 {Filling a memory region}
+                 {0.7}{H}
+
+    A problem arrises when the block should write or read
+    at the end of the buffer.
+    As the buffer is circular reads and writes beyond the
+    end of the buffer should wrap to addresses at the start of the
+    buffer.
+
+    Figure \ref{img:gr_rb_mmap_b} shows a situation where
+    a write to the passed region would lead to an overflow
+    to memory not belonging to the buffer.
+
+    \figurizefile{diagrams/gr_rb_mmap_b.tex}
+                 {img:gr_rb_mmap_b}
+                 {Overflowing the memory region}
+                 {0.7}{H}
+
+    A possible workaround is to execute the block
+    twice whenever the buffer boundary is crossed,
+    as shown in \ref{img:gr_rb_mmap_c}.
+
+    This leads to worse performance, as the block might have
+    to perform some initialization on every execution.
+    Further problems arrise when the size of the buffer is not
+    a multiple of the size of an item.
+
+    \figurizefile{diagrams/gr_rb_mmap_c.tex}
+                 {img:gr_rb_mmap_c}
+                 {Scheduling twice to prevent overflowing}
+                 {0.7}{H}
+
+    GNURadio uses another approach, it instructs the operating system
+    to map the buffer twice into the address space of the program,
+    right after one another \cite{grrdbufmmap}.
+
+    This leads to a memory layout like in figure \ref{img:gr_rb_mmap_d}.
+    Reads and writes to addresses \texttt{0x1000} to \texttt{0x1fff} in the program
+    will be redirect to the same physical memory as writes to addresses
+    \texttt{0x0000} to \texttt{0x0fff} by the computers \gls{mmu}.
+
+    \figurizefile{diagrams/gr_rb_mmap_d.tex}
+                 {img:gr_rb_mmap_d}
+                 {Mapping the same memory region twice to prevent overflowing}
+                 {0.7}{H}
+
+    The scheduler can thus just pass the start address and the length of
+    the data to write/read to the block without having to explicitly handle
+    the wrapping.
   \end{subsubchapter}
 \end{subchapter}
