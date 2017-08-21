@@ -1,8 +1,8 @@
-Sofi Report
-===========
+HnezOFDM Report
+===============
 
-The final report about the SoFi
-DoA estimation software.
+A thesis and presentation considering the
+HnezOFDM GNURadio toolkit.
 
 License
 =======
