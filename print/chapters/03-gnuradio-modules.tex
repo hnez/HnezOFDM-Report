@@ -418,7 +418,7 @@ This chapter presents the anatomy of a GNURadio module.
 
     This leads to a memory layout like in figure \ref{img:gr_rb_mmap_d}.
     Reads and writes to addresses \texttt{0x1000} to \texttt{0x1fff} in the program
-    will be redirect to the same physical memory as writes to addresses
+    will be redirect to the same physical memory as reads/writes to addresses
     \texttt{0x0000} to \texttt{0x0fff} by the computers \gls{mmu}.
 
     \figurizefile{diagrams/gr_rb_mmap_d.tex}
