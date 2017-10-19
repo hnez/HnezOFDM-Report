@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+  \node[anchor=south west,inner sep=0](image) at (0,0) {
+    \includegraphics[width=\linewidth]{images/gnuradio_companion_detectors.png}
+  };
+
+  \begin{scope}[x={(image.south east)},y={(image.north west)}]
+    \draw[red, thick, rounded corners] (0.03787, -0.01) rectangle (0.78732, 0.19961); % Relevant blocks
+  \end{scope}
+\end{tikzpicture}

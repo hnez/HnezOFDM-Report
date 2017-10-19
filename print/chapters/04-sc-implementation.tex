@@ -1,6 +1,49 @@
+The GNURadio blocks implemented as part of this thesis are
+shown in figure \ref{img:annotated_gnuradio_companion_detectors},
+circled in red.
 
-% TODO: add more stuff to the flowgraph
-\figurizegraphic{images/gnuradio_companion_scgate.png}
-                {img:gnuradio_companion_scgate}
-                {The desired interface of the \gls{schcox} detector}
-                {0.5}{h}
+\figurizefile{diagrams/annotated_gnuradio_companion_detectors.tex}
+             {img:annotated_gnuradio_companion_detectors}
+             {The interface of the \gls{schcox} detectors}
+             {0.95}{h}
+
+The purpose of these blocks is to take a stream of input signals
+and to add annotations to this stream whenever a synchronization-preamble
+is detected.
+Figure \ref{img:annotated_gnuradio_companion_detectors_plot} shows an example output
+of the detector blocks, where an an annotation is placed right at the start of a
+synchronization sequence.
+
+\figurizefile{diagrams/annotated_gnuradio_companion_detectors_plot.tex}
+             {img:annotated_gnuradio_companion_detectors_plot}
+             {The output of the \gls{schcox} detectors}
+             {0.95}{h}
+
+As performance is a major design goal in the implementation of these blocks,
+all of them are written in C++ and some tricks are used to make them
+perform well on a modern \acrshort{cpu}.
+
+\begin{subchapter}{\acrlong{schcox} correlator}
+  The functionality of the \acrlong{schcox} correlator
+  block is shown in figure \ref{img:sc_correlator_blocks}.
+  The block takes one input signal, calculates the correlation
+  as described in the \acrlong{schcox} chapter and normalizes it
+  with the average input power in the analyzed duration.
+
+  It also outputs a delayed version of the input sequence so that
+  a peak at the correlation output corresponds to the start of a
+  preamble and not its end.
+
+  \figurizefile{diagrams/sc_correlator_blocks.tex}
+               {img:sc_correlator_blocks}
+               {Block diagram of the \acrlong{schcox} correlator}
+               {0.6}{h}
+
+
+\end{subchapter}
+
+\begin{subchapter}{\acrlong{schcox} tagger}
+\end{subchapter}
+
+\begin{subchapter}{Cross-correlation tagger}
+\end{subchapter}

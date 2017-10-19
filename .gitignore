@@ -8,6 +8,7 @@
 /presentation/target/diagrams/*.pdf
 /presentation/target/diagrams/latex.out
 
+top_block.py
 .~lock.*
 \#*
 *~

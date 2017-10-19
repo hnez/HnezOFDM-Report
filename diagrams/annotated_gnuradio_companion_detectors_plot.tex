@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+  \node[anchor=south west,inner sep=0](image) at (0,0) {
+    \includegraphics[width=\linewidth]{images/gnuradio_companion_detectors_plot.png}
+  };
+
+  \begin{scope}[x={(image.south east)},y={(image.north west)}]
+    \draw[red, thick, rounded corners] (0.092, 0.6257) rectangle (0.700, 0.7137); % Relevant blocks
+
+    \draw[red, thick]
+    (0.2, 0.6257) -- (0.2, -0.02) node[anchor=north, black, align=right]{\texttt{preamble\_start} tag};
+  \end{scope}
+\end{tikzpicture}
