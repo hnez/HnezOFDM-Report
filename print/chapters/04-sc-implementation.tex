@@ -28,7 +28,7 @@ perform well on a modern \acrshort{cpu}.
   block is shown in figure \ref{img:sc_correlator_blocks}.
   The block takes one input signal, calculates the correlation
   as described in the \acrlong{schcox} chapter and normalizes it
-  with the average input power in the analyzed duration.
+  with the average input power in the analyzed duration. \\
 
   It also outputs a delayed version of the input sequence so that
   a peak at the correlation output corresponds to the start of a
@@ -43,7 +43,42 @@ perform well on a modern \acrshort{cpu}.
 \end{subchapter}
 
 \begin{subchapter}{\acrlong{schcox} tagger}
+  The next step in the detection pipeline is to find peaks in
+  the output of the \acrlong{schcox} correlator and to put
+  a tag on them. \\
+
+  Depending on the input noise-level the correlation output
+  can be quite noisy. To prevent local fluctuations from being
+  detected as multiple start-of-frame preambles and thus producing
+  bursts of start-of-frame tags the \acrshort{schcox} tagger
+  applies a user-defined amount of hysteresis to the detection
+  process.
+
+  \figurizefile{diagrams/sc_tagger_hysteresis.tex}
+               {img:sc_tagger_hysteresis}
+               {Detection levels of the \acrshort{schcox} tagger}
+               {0.6}{H}
+
+  An illustration is shown in figure \ref{img:sc_tagger_hysteresis}.
+  The upper and lower detection thresholds are provided by
+  the user. \\
+
+  Whenever the upper threshold is exceeded a detection window is started.
+  The detection window ends when the input falls below the lower
+  threshold.
+  Exactly one tag will be placed in this detection window at
+  the position of the highest value. 
 \end{subchapter}
 
 \begin{subchapter}{Cross-correlation tagger}
+  The last detection step is used to increase the time accuracy
+  of the preamble detection and to prevent triggering on foreign
+  preambles.
+
+  \figurizefile{diagrams/xcorr_tagger_blocks.tex}
+               {img:xcorr_tagger_blocks.tex}
+               {TODO}
+               {0.8}{H}
+
+  
 \end{subchapter}

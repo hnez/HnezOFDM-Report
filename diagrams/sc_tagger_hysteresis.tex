@@ -1,0 +1,23 @@
+\begin{tikzpicture}
+  \node[anchor=south west,inner sep=0](image) at (0,0) {
+    \includegraphics[width=\linewidth]{diagrams/sc_detector_output_nooff_abs.pdf}
+  };
+
+  \begin{scope}[x={(image.south east)},y={(image.north west)}]
+    \draw[green, thick, densely dotted]
+    (0.125, 0.55) -- (0.95, 0.55) node[anchor=west, black, align=right]{Hysteresis low};
+
+    \draw[red, thick, densely dotted]
+    (0.125, 0.75) -- (0.95, 0.75) node[anchor=west, black, align=right]{Hysteresis high};
+
+    \draw[blue, thick, densely dotted]
+    (0.506, 0.11) -- (0.506, 0.95) -- (0.95, 0.95) node[anchor=west, black, align=right]{Tag position};
+
+    \fill[blue, opacity=0.2]
+    (0.482, 0.11) rectangle (0.572, 0.88);
+
+    \draw[blue, thick, densely dotted]
+    (0.572, 0.11) -- (0.572, 0.02)
+    (0.482, 0.11) -- (0.482, 0.02) -- (0.95, 0.02) node[anchor=west, black, align=right]{Detection window};
+  \end{scope}
+\end{tikzpicture}
