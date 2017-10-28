@@ -1,5 +1,5 @@
 The GNURadio blocks implemented as part of this thesis are
-shown in figure \ref{img:annotated_gnuradio_companion_detectors},
+shown in \autoref{img:annotated_gnuradio_companion_detectors},
 circled in red.
 
 \figurizefile{diagrams/annotated_gnuradio_companion_detectors.tex}
@@ -10,11 +10,11 @@ circled in red.
 The purpose of these blocks is to take a stream of input signals
 and to add annotations to this stream whenever a synchronization-preamble
 is detected.
-Figure \ref{img:annotated_gnuradio_companion_detectors_plot} shows an example output
+\autoref{img:annotated_gnuradio_companion_detectors_plot} shows an example output
 of the detector blocks, where an an annotation is placed right at the start of a
 synchronization sequence.
 
-\figurizefile{diagrams/annotated_gnuradio_companion_detectors_plot.tex}
+\figurizefile{diagrams/annotated_grc_detectors_plot.tex}
              {img:annotated_gnuradio_companion_detectors_plot}
              {The output of the \gls{schcox} detectors}
              {0.95}{h}
@@ -25,7 +25,7 @@ perform well on a modern \acrshort{cpu}.
 
 \begin{subchapter}{\acrlong{schcox} correlator}
   The functionality of the \acrlong{schcox} correlator
-  block is shown in figure \ref{img:sc_correlator_blocks}.
+  block is shown in \autoref{img:sc_correlator_blocks}.
   The block takes one input signal, calculates the correlation
   as described in the \acrlong{schcox} chapter and normalizes it
   with the average input power in the analyzed duration. \\
@@ -57,9 +57,9 @@ perform well on a modern \acrshort{cpu}.
   \figurizefile{diagrams/sc_tagger_hysteresis.tex}
                {img:sc_tagger_hysteresis}
                {Detection levels of the \acrshort{schcox} tagger}
-               {0.6}{H}
+               {0.6}{h}
 
-  An illustration is shown in figure \ref{img:sc_tagger_hysteresis}.
+  An illustration is shown in \autoref{img:sc_tagger_hysteresis}.
   The upper and lower detection thresholds are provided by
   the user. \\
 
@@ -67,18 +67,57 @@ perform well on a modern \acrshort{cpu}.
   The detection window ends when the input falls below the lower
   threshold.
   Exactly one tag will be placed in this detection window at
-  the position of the highest value. 
+  the position of the highest value.
 \end{subchapter}
 
 \begin{subchapter}{Cross-correlation tagger}
   The last detection step is used to increase the time accuracy
   of the preamble detection and to prevent triggering on foreign
   preambles.
+  It takes as inputs the sample stream that was tagged with
+  start-of-frame tags by the \acrshort{schcox} tagger
+  and a reference preamble.
+
+  Whenever a start-of-frame tag is encountered in the input stream,
+  a chunk of samples will be extracted around the tag and the
+  cross-correlation of this chunk and a preamble stored for reference
+  will be computed.
+
+  If the maximum cross-correlation is below a preset threshold
+  the tag, that triggered the check will, not be forwarded to the
+  next block.
+
+  If the threshold is exceeded the tag will be moved to the sample
+  where the cross-correlation is at maximum. \\
 
   \figurizefile{diagrams/xcorr_tagger_blocks.tex}
                {img:xcorr_tagger_blocks.tex}
-               {TODO}
-               {0.8}{H}
+               {In-depth operation of the cross-correlation tagger}
+               {0.8}{h}
 
-  
+  A more detailed view of the inner workings of the cross-correlation
+  tagger is shown in \autoref{img:xcorr_tagger_blocks.tex}. \\
+
+  The computation of the cross-correlation is, as shown in the
+  block-diagram, implemented using the \acrlong{fft} and its inverse.
+  This method provides superior computation speed when dealing
+  with large chunks of samples, when compared to the naive implementation
+  of the cross-correlation \cite{kammeyer2012}. \\
+
+  The extracted chunk of samples is zero-padded to a power-of-two size.
+  This has two effects: for one the \acrshort{fft} algorithm performs
+  best when operating on chunks that are a power-of-two in length.
+  Secondly the zero padding effectively turns the circular cross-correlation
+  calculation performed by the \acrshort{fft} into a normal cross-correlation
+  \cite{kammeyer2012}. \\
+
+  After the calculation of the \acrshort{ifft} the resulting cross-correlation
+  will contain two side lobes in addition the desired maximum.
+  These side lobes are a result of the repeating nature of the preamble, as
+  discussed in \autoref{chap:intr_scsync}.
+
+  To mask out these side lobes the cross-correlation can be multiplied by
+  the the correlation output of the \acrlong{schcox} correlator,
+  which will have a triangular pattern with a peak around the desired
+  maximum, as can be seen in \autoref{img:sc_tagger_hysteresis}.
 \end{subchapter}
