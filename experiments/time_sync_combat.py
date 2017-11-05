@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 from gnuradio import gr, blocks, channels
+from multiprocessing import Pool
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,6 +11,7 @@ import itertools as it
 import operator as op
 
 import xfdm_sync
+import time
 
 def cplx_randn(length):
     mag= np.random.randn(length)
@@ -29,7 +31,7 @@ class DUTBurstSilence(gr.hier_block2):
 
         # Blocks
         self.corr = xfdm_sync.burstsilence_corr(preamble_length)
-        self.tagger = xfdm_sync.sc_tagger(50, 200, preamble_length)
+        self.tagger = xfdm_sync.sc_tagger(300, 400, preamble_length)
 
         # Connections
         self.connect((self, 0), (self.corr, 0))
@@ -58,7 +60,7 @@ class DUTFreqSweep(gr.hier_block2):
 
         # Blocks
         self.corr = xfdm_sync.fqsweep_corr(preamble_length)
-        self.tagger = xfdm_sync.sc_tagger(180, 220, preamble_length)
+        self.tagger = xfdm_sync.sc_tagger(0.7, 0.9, preamble_length)
 
         # Connections
         self.connect((self, 0), (self.corr, 0))
@@ -70,10 +72,9 @@ class DUTFreqSweep(gr.hier_block2):
         self.connect((self.tagger, 1), (self, 1))
 
     def gen_preamble(self):
-        SPAN= np.pi*7/8
+        span= np.pi*3/4
 
-        freq_rise= np.linspace(-SPAN, SPAN, self.preamble_length/2)
-        freqs= np.concatenate((freq_rise, freq_rise[::-1]))
+        freqs= np.linspace(-span, span, self.preamble_length)
         phases= np.add.accumulate(freqs)
         samples= np.exp(1j * phases)
 
@@ -91,7 +92,7 @@ class DUTSchCox(gr.hier_block2):
 
         # Blocks
         self.corr = xfdm_sync.sc_delay_corr(preamble_length/2, True)
-        self.tagger = xfdm_sync.sc_tagger(0.6, 0.8, preamble_length)
+        self.tagger = xfdm_sync.sc_tagger(0.3, 0.4, preamble_length)
 
         # Connections
         self.connect((self, 0), (self.corr, 0))
@@ -117,15 +118,25 @@ class DUTSchCox(gr.hier_block2):
 
         return(samples)
 
+def rms(sig):
+    return np.sqrt((abs(sig) ** 2).sum() / len(sig))
 
 class AlgorithmArena(gr.top_block):
-    def __init__(self, dut, noise_level):
+    def __init__(self, dut, noise_level, channel_irs, delta_f):
         gr.top_block.__init__(self, "Algorithm Arena")
+
+        channel_irs= np.array(channel_irs,np.float64)
 
         # Generate Signal
         self.dut= dut
         preamble= dut.gen_preamble()
         frame= self.gen_ofdmframe(512, 64, 64)
+
+        # Normalize power
+        preamble/= rms(preamble)
+        frame/= rms(frame)
+        channel_irs/= rms(channel_irs)
+
         pad= np.zeros(9000)
 
         signal= np.concatenate((pad, preamble, frame))
@@ -137,9 +148,9 @@ class AlgorithmArena(gr.top_block):
 
         self.channel = channels.channel_model(
             noise_voltage= noise_level,
-            frequency_offset= 0.0,
+            frequency_offset= delta_f,
             epsilon= 1.0,
-            taps= ((1.0, )),
+            taps= channel_irs,
             noise_seed= np.random.randint(2**31),
             block_tags= False
         )
@@ -181,7 +192,7 @@ class AlgorithmArena(gr.top_block):
 
     def gen_ofdmsym(self, len_fft, len_cp):
         fqd= np.random.choice((-1, 1), len_fft) + np.random.choice((-1j, 1j), len_fft)
-        tid= np.fft.ifft(fqd) * (len_fft**0.5)
+        tid= np.fft.ifft(fqd)
 
         cyc= np.concatenate((tid[-len_cp:], tid))
 
@@ -194,7 +205,7 @@ class AlgorithmArena(gr.top_block):
 
         return(frame)
 
-def histogram(arena_gen, iterations):
+def histogram(arena_gen, iterations, center):
     dist= dict()
 
     for i in range(iterations):
@@ -205,10 +216,6 @@ def histogram(arena_gen, iterations):
 
         #arena.plot()
 
-    center, _= max(
-        filter(lambda h: (h[0] > 9000 and h[0] < 12000), dist.items()),
-        key= lambda h: h[1]
-    )
     start= center-10
     end= center+11
 
@@ -225,57 +232,196 @@ def histogram(arena_gen, iterations):
         for i in range(start, end)
     )
 
-    return(center, hist)
+    return(hist)
 
+def db_ampl(db):
+    return 10 ** (db / 20.0)
+
+def db_pwr(db):
+    return 10 ** (db / 10.0)
+
+def test_snr(preamble_len, runs, snr):
+    noise_level= db_ampl(-snr)
+
+    print('Working on snr {}dB, {}'.format(snr,noise_level))
+
+    algos= dict()
+
+    def bs_gen():
+        dut= DUTBurstSilence(preamble_len)
+        aa= AlgorithmArena(dut, noise_level, (1,), 0)
+
+        return(aa)
+
+    algos['bs']= histogram(bs_gen, runs, 10532)
+
+
+    def fqs_gen():
+        dut= DUTFreqSweep(preamble_len)
+        aa= AlgorithmArena(dut, noise_level, (1,), 0)
+
+        return(aa)
+
+    algos['fq']= histogram(fqs_gen, runs, 10534)
+
+
+    def sc_gen():
+        dut= DUTSchCox(preamble_len)
+        aa= AlgorithmArena(dut, noise_level, (1,), 0)
+
+        return(aa)
+
+    algos['sc']= histogram(sc_gen, runs, 10531)
+
+    return algos
+
+def test_channels(preamble_len, runs, channel):
+    noise_level= db_ampl(-6.0)
+
+    print('Working on channel {}'.format(' | '.join(map(str, channel))))
+
+    algos= dict()
+
+    def bs_gen():
+        dut= DUTBurstSilence(preamble_len)
+        aa= AlgorithmArena(dut, noise_level, channel, 0)
+
+        return(aa)
+
+    algos['bs']= histogram(bs_gen, runs, 10532)
+
+
+    def fqs_gen():
+        dut= DUTFreqSweep(preamble_len)
+        aa= AlgorithmArena(dut, noise_level, channel, 0)
+
+        return(aa)
+
+    algos['fq']= histogram(fqs_gen, runs, 10534)
+
+
+    def sc_gen():
+        dut= DUTSchCox(preamble_len)
+        aa= AlgorithmArena(dut, noise_level, channel, 0)
+
+        return(aa)
+
+    algos['sc']= histogram(sc_gen, runs, 10531)
+
+    return algos
+
+
+def test_freqoffs(preamble_len, runs, freq_off):
+    noise_level= db_ampl(-6.0)
+
+    print('Working on freq {}'.format(freq_off))
+
+    algos= dict()
+
+    def bs_gen():
+        dut= DUTBurstSilence(preamble_len)
+        aa= AlgorithmArena(dut, noise_level, (1, ), freq_off)
+
+        return(aa)
+
+    algos['bs']= histogram(bs_gen, runs, 10532)
+
+
+    def fqs_gen():
+        dut= DUTFreqSweep(preamble_len)
+        aa= AlgorithmArena(dut, noise_level, (1, ), freq_off)
+
+        return(aa)
+
+    algos['fq']= histogram(fqs_gen, runs, 10534)
+
+
+    def sc_gen():
+        dut= DUTSchCox(preamble_len)
+        aa= AlgorithmArena(dut, noise_level, (1, ), freq_off)
+
+        return(aa)
+
+    algos['sc']= histogram(sc_gen, runs, 10531)
+
+    return algos
 
 def main():
-    TEST_RUNS= 500
+    TEST_RUNS= 20
     PREAMBLE_LEN= 512
-    NOISE_LEVELS= (0.1, 0.4, 0.7, 1.0, 1.5)
 
-    global histograms
-    histograms= dict()
+    SNR_DB= (6.0, 4.5, 3.0, 1.5, 0.0, -1.5, -3)
+    CHANNEL_IRS= (
+        (1, ),
+        (1, db_ampl(-10), db_ampl(-10), db_ampl(-20), db_ampl(-20), 0, db_ampl(-17)),
+        (1, ) + 10 * (0, ) + (db_ampl(-7), db_ampl(-4), db_ampl(-7)),
+        (1, ) + 10 * (0, ) + (db_ampl(-2), ),
+        (1, ) + 5 * (0, ) + (1, 1, 1) + 4 * (0, ) + (1, )
+    )
+    FREQ_OFFS= (0, 0.1, 0.3)
 
-    for noise_level in NOISE_LEVELS:
-        histograms[noise_level]= dict()
+    process_pool= Pool(12)
 
-        def bs_gen():
-            dut= DUTBurstSilence(PREAMBLE_LEN)
-            aa= AlgorithmArena(dut, noise_level)
+    tasks= dict()
 
-            return(aa)
+    time_start= time.time()
 
-        histograms[noise_level]['bs']= histogram(bs_gen, TEST_RUNS)
+    tasks['nois']= list(
+        process_pool.apply_async(test_snr, (PREAMBLE_LEN, TEST_RUNS, snr))
+        for snr in SNR_DB
+    )
 
+    tasks['chan']= list(
+        process_pool.apply_async(test_channels, (PREAMBLE_LEN, TEST_RUNS, chan))
+        for chan in CHANNEL_IRS
+    )
 
-        def fqs_gen():
-            dut= DUTFreqSweep(PREAMBLE_LEN)
-            aa= AlgorithmArena(dut, noise_level)
+    tasks['freq']= list(
+        process_pool.apply_async(test_freqoffs, (PREAMBLE_LEN, TEST_RUNS, fo))
+        for fo in FREQ_OFFS
+    )
 
-            return(aa)
+    tests= dict(
+        (name, list(task.get() for task in task_list))
+        for (name, task_list)
+        in tasks.items()
+    )
 
-        histograms[noise_level]['fq']= histogram(fqs_gen, TEST_RUNS)
+    process_pool.terminate()
+    process_pool.join()
 
+    time_end= time.time()
 
-        def sc_gen():
-            dut= DUTSchCox(PREAMBLE_LEN)
-            aa= AlgorithmArena(dut, noise_level)
+    print(time_end, time_start)
 
-            return(aa)
+    print('Doing {} runs took {:.2f} Minutes'.format(
+        TEST_RUNS,
+        (time_end - time_start) / 60.0
+    ))
 
-        histograms[noise_level]['sc']= histogram(sc_gen, TEST_RUNS)
+    for (test_name, test_results) in tests.items():
+        plt.figure()
+        plot_num= 1
 
+        for (subtest_id, subtest_results) in enumerate(test_results):
+            for (algo_name, algo_results) in subtest_results.items():
+                n_subtests= len(test_results)
+                n_algos= len(subtest_results)
 
-    for row in range(5):
-        for col in range(3):
-            rowa= NOISE_LEVELS[row]
-            cola= ('bs', 'fq', 'sc')[col]
+                plt.subplot(n_subtests, n_algos, plot_num)
+                plt.bar(
+                    np.arange(len(algo_results)),
+                    algo_results
+                )
 
-            plt.subplot(5, 3, col + row*3 +1)
+                plot_num+= 1
 
-            hs= np.array(histograms[rowa][cola][1])
-
-            plt.bar(np.arange(len(hs)), hs)
+                print('{}_{}_{} = {}'.format(
+                    test_name,
+                    subtest_id,
+                    algo_name,
+                    ', '.join(map(str, algo_results))
+                ))
 
     plt.show()
 
