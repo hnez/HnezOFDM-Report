@@ -16,6 +16,7 @@ all: ${SVG_FILES}
 	$(file > $(@),\RequirePackage{luatex85})
 	$(file >> $(@),\documentclass{standalone})
 	$(file >> $(@),\usepackage{amsmath})
+	$(file >> $(@),\usepackage{varwidth})
 	$(file >> $(@),\usepackage{siunitx})
 	$(file >> $(@),\usepackage{verbatim})
 	$(file >> $(@),\usepackage[usenames,dvipsnames]{xcolor})

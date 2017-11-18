@@ -54,7 +54,6 @@ li li {
 }
 
 img, video {
-    border-radius: 0.5em;
     box-shadow: 0 0 1em black;
     background-color: white;
 
