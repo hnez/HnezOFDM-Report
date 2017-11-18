@@ -13,11 +13,44 @@ import operator as op
 import xfdm_sync
 import time
 
+
 def cplx_randn(length):
     mag= np.random.randn(length)
     ph= 2 * np.pi * np.random.rand(length)
 
     return mag * np.exp(1j * ph)
+
+def rms(sig):
+    return np.sqrt((abs(sig) ** 2).sum() / len(sig))
+
+def db_ampl(db):
+    return 10 ** (db / 20.0)
+
+def db_pwr(db):
+    return 10 ** (db / 10.0)
+
+
+PREAMBLE_LEN= 512
+
+SNR_DB= (
+    6.0, 4.5, 3.0, 1.5,
+    0.0,
+    -1.5, -3
+)
+
+CHANNEL_IRS= (
+    (1, ),
+    (1, db_ampl(-10), db_ampl(-10), db_ampl(-20), db_ampl(-20), 0, db_ampl(-17)),
+    (1, ) + 10 * (0, ) + (db_ampl(-7), db_ampl(-4), db_ampl(-7)),
+    (1, ) + 10 * (0, ) + (db_ampl(-2), ),
+    (1, ) + 5 * (0, ) + (1, 1, 1) + 4 * (0, ) + (1, )
+)
+
+FREQ_OFFS= (
+    0,
+    0.1,
+    0.3
+)
 
 class DUTBurstSilence(gr.hier_block2):
     def __init__(self, preamble_length):
@@ -117,9 +150,6 @@ class DUTSchCox(gr.hier_block2):
         samples= np.concatenate((half, half))
 
         return(samples)
-
-def rms(sig):
-    return np.sqrt((abs(sig) ** 2).sum() / len(sig))
 
 class AlgorithmArena(gr.top_block):
     def __init__(self, dut, noise_level, channel_irs, delta_f):
@@ -234,12 +264,6 @@ def histogram(arena_gen, iterations, center):
 
     return(hist)
 
-def db_ampl(db):
-    return 10 ** (db / 20.0)
-
-def db_pwr(db):
-    return 10 ** (db / 10.0)
-
 def test_snr(preamble_len, runs, snr):
     noise_level= db_ampl(-snr)
 
@@ -346,20 +370,7 @@ def test_freqoffs(preamble_len, runs, freq_off):
 
     return algos
 
-def main():
-    TEST_RUNS= 20
-    PREAMBLE_LEN= 512
-
-    SNR_DB= (6.0, 4.5, 3.0, 1.5, 0.0, -1.5, -3)
-    CHANNEL_IRS= (
-        (1, ),
-        (1, db_ampl(-10), db_ampl(-10), db_ampl(-20), db_ampl(-20), 0, db_ampl(-17)),
-        (1, ) + 10 * (0, ) + (db_ampl(-7), db_ampl(-4), db_ampl(-7)),
-        (1, ) + 10 * (0, ) + (db_ampl(-2), ),
-        (1, ) + 5 * (0, ) + (1, 1, 1) + 4 * (0, ) + (1, )
-    )
-    FREQ_OFFS= (0, 0.1, 0.3)
-
+def show_tests(runs=100):
     process_pool= Pool(12)
 
     tasks= dict()
@@ -367,17 +378,17 @@ def main():
     time_start= time.time()
 
     tasks['nois']= list(
-        process_pool.apply_async(test_snr, (PREAMBLE_LEN, TEST_RUNS, snr))
+        process_pool.apply_async(test_snr, (PREAMBLE_LEN, runs, snr))
         for snr in SNR_DB
     )
 
     tasks['chan']= list(
-        process_pool.apply_async(test_channels, (PREAMBLE_LEN, TEST_RUNS, chan))
+        process_pool.apply_async(test_channels, (PREAMBLE_LEN, runs, chan))
         for chan in CHANNEL_IRS
     )
 
     tasks['freq']= list(
-        process_pool.apply_async(test_freqoffs, (PREAMBLE_LEN, TEST_RUNS, fo))
+        process_pool.apply_async(test_freqoffs, (PREAMBLE_LEN, runs, fo))
         for fo in FREQ_OFFS
     )
 
@@ -392,10 +403,8 @@ def main():
 
     time_end= time.time()
 
-    print(time_end, time_start)
-
     print('Doing {} runs took {:.2f} Minutes'.format(
-        TEST_RUNS,
+        runs,
         (time_end - time_start) / 60.0
     ))
 
@@ -425,5 +434,21 @@ def main():
 
     plt.show()
 
-if __name__ == '__main__':
-    main()
+def show_bode():
+    for chir in CHANNEL_IRS:
+        td= np.zeros(512)
+        td[:len(chir)]= chir
+
+        fd= np.fft.fft(td)[:256]
+        fd_abs= abs(fd)
+        fd_arg= np.angle(fd)
+
+        plt.figure()
+
+        plt.subplot(2, 1, 1)
+        plt.plot(fd_abs)
+
+        plt.subplot(2, 1, 2)
+        plt.plot(fd_arg)
+
+    plt.show()
