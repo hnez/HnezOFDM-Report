@@ -116,6 +116,10 @@ Schmidl & Cox - detector
 
 ---
 
+![S&C detector output](diagrams/sc_detector_output_nooff.svg)
+
+---
+
 ![S&C calculation](diagrams/sc_calculation_fqoff.svg)
 
 S&C detector with frequency offset
@@ -222,6 +226,8 @@ Correlator
 Performs the raw S&C calculation and outputs a correlation
 value normalized to the mean input power
 
+[Source](https://github.com/hnez/XFDMSync/blob/master/lib/sc_delay_corr_impl.cc)
+
 ---
 
 Tagger
@@ -232,6 +238,8 @@ Tagger
 Adds a tag to the sample stream when set thresholds
 are crossed
 
+[Source](https://github.com/hnez/XFDMSync/blob/master/lib/sc_tagger_impl.cc)
+
 ---
 
 XCorr Tagger
@@ -241,6 +249,8 @@ XCorr Tagger
 
 Relocates incomming tags based on cross-correlation
 of stored preamble and received preamble
+
+[Source](https://github.com/hnez/XFDMSync/blob/master/lib/xcorr_tagger_impl.cc)
 
 ---
 
