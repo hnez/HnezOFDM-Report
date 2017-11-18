@@ -1,0 +1,10 @@
+\begin{varwidth}{10cm}
+  \begin{align*}
+    \label{eq:sc_peak}
+    \frac{1}{N/2} \sum_{i=0}^{N/2} x_{i} \cdot x_{i-N/2}^\ast &=
+    \frac{1}{N/2} \sum_{i=0}^{N/2} \left(s_{i} + n_{i} \right) \cdot \left(s_{i-N/2} + n_{i-N/2} \right)^\ast \nonumber \\
+    &= \frac{1}{N/2} \sum_{i=0}^{N/2} \left(s_{i} + n_{i} \right) \cdot \left(s_{i} + n_{i-N/2} \right)^\ast \nonumber \\
+    &\approx \frac{1}{N/2} \sum_{i=0}^{N/2} s_{i} \cdot s_{i}^\ast
+    = \frac{1}{N/2} \sum_{i=0}^{N/2} \abs{s_{i}}^2
+  \end{align*}
+\end{varwidth}
