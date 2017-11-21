@@ -2,6 +2,15 @@ _Implementation and Analysis of Multi-Carrier Synchronization Techniques_
 
 ---
 
+gr-xfdmsync
+===========
+
+![S&C blocks](diagrams/annotated_gnuradio_companion_detectors.svg)
+
+Multi-carrier synchronization for GnuRadio
+
+---
+
 Multi-Carrier systems
 =====================
 
