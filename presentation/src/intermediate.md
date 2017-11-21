@@ -75,13 +75,6 @@ Time offset
 
 ---
 
-Non-linear channel
-------------------
-
-![Non-linear](images/ofdm_sync_vis_nonlinear.png)
-
----
-
 Simple synchronization
 ----------------------
 
@@ -143,6 +136,9 @@ S&C phase
 
 ![Corrected frequency offset](images/ofdm_sync_vis_fqshift_corrected.png)
 
+Using the calculated frequency offset the symbols can be
+sampled correctly
+
 ---
 
 _GnuRadio_
@@ -152,10 +148,10 @@ _GnuRadio_
 GnuRadio …
 ==========
 
-- … provides a set of digital signal processing components
-- … lets an user combine components to form a signal processing chain
-- … lets developers write own components while abstracting away
-  the stream processing and multithreading
+- … provides a set of <span style="color: rgb(161, 206, 76);">DSP components</span>
+- … <span style="color: rgb(161, 206, 76);">combines</span>
+  components to form a signal processing chain
+- … lets developers <span style="color: rgb(161, 206, 76);">write own components</span>
 
 ---
 
@@ -169,7 +165,7 @@ GnuRadio companion
 Using GnuRadio
 ==============
 
-GnuRadio provides different levels of abstraction/programming interfaces:
+GnuRadio levels of abstraction:
 
 - Graphical block-diagram based interface<br/>
   → <span style="color: rgb(161, 206, 76);">very intuitive</span>
@@ -200,11 +196,6 @@ XFDMSync - usage
 ================
 
 ![S&C blocks](diagrams/annotated_gnuradio_companion_detectors.svg)
-
-Processing is still split into logic blocks to allow …
-
-- … tapping of debug information
-- … replacing of blocks with custom ones
 
 ---
 
@@ -248,7 +239,7 @@ XCorr Tagger
 ![Xcorr tagger](diagrams/xcorr_tagger_blocks.svg)
 
 Relocates incomming tags based on cross-correlation
-of stored preamble and received preamble
+with stored preamble
 
 [Source](https://github.com/hnez/XFDMSync/blob/master/lib/xcorr_tagger_impl.cc)
 

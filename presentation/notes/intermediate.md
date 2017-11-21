@@ -217,18 +217,6 @@ ignoriert.
 
 ---
 
-Folie 11
-========
-
-Ein nicht linearer Kanal sorgt dafür, dass Mischprodukte
-aller Träger entstehen.
-
-Das ist nicht gut.
-
-Gucken wir uns aber nicht weiter an.
-
----
-
 Folie 12
 ========
 
