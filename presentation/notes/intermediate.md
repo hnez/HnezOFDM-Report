@@ -8,11 +8,20 @@ Folie 1
 
 Habe mich mit der Synchronisation in Mehrträgersystemen beschäftigt.
 
-Was heißt das?
-
 ---
 
 Folie 2
+=======
+
+Und habe mich damit beschäftigt ein Verfahren
+selbst in C++ für GnuRadio zu implementieren.
+
+Aber erst einmal: was sind Mehträgerubertragungssysteme
+und was muss man bei denen synchronisieren?
+
+---
+
+Folie 3
 =======
 
 Mehrträgersysteme versuchen Übertragungen über frequenzselektive
@@ -28,7 +37,7 @@ Der Ausfall einzelner Träger kann somit kompensiert werden.
 
 ---
 
-Folie 3
+Folie 4
 =======
 
 Ein verbreitetes und einfaches Mehrträgerübertragungsverfahren
@@ -41,7 +50,7 @@ __Es wird stark vereinfach__
 
 ---
 
-Folie 4
+Folie 5
 =======
 
 OFDM betrachtet von __ganz weit weg__
@@ -121,7 +130,7 @@ Ein OFDM Symbol besteht aus mehreren Symbolen
 
 ---
 
-Folie 5
+Folie 6
 =======
 
 _Rhetorische Frage: wer hat schon ein Waterfall diagram gesehen?_
@@ -137,7 +146,7 @@ Deshalb werde ich zur Vorstellung der Anforderungen von OFDM auch ein
 
 ---
 
-Folie 6
+Folie 7
 =======
 
 So sieht das Diagramm aus:
@@ -158,7 +167,7 @@ Z.B., wie erwähnt, ein Kanal mit nicht flachem Frequenzgang.
 
 ---
 
-Folie 7
+Folie 8
 =======
 
 Der Kanal macht einige Unterträger unnutzbar
@@ -171,7 +180,7 @@ oder ein Naturereignis
 
 ---
 
-Folie 8
+Folie 9
 =======
 
 Burst macht einen Teil der Nachricht unnutzbar.
@@ -185,7 +194,7 @@ Doppler-Shift
 
 ---
 
-Folie 9
+Folie 10
 =======
 
 Das Signal ist rekt. Alle Träger sind betroffen.
@@ -198,7 +207,7 @@ Was passiert bei einem Offset im Zeitbereich?
 
 ---
 
-Folie 10
+Folie 11
 ========
 
 Auch bei Zeitoffset geht alles kaputt.
@@ -214,18 +223,6 @@ In echten Implentationen ist der Effekt deutlich weniger
 drastisch durch den Einsatz von Cyclic-Prefixes.
 Für den dramatischen Effekt werden die aber ersteinmal
 ignoriert.
-
----
-
-Folie 11
-========
-
-Ein nicht linearer Kanal sorgt dafür, dass Mischprodukte
-aller Träger entstehen.
-
-Das ist nicht gut.
-
-Gucken wir uns aber nicht weiter an.
 
 ---
 
