@@ -152,7 +152,7 @@ class DUTSchCox(gr.hier_block2):
         return(samples)
 
 class AlgorithmArena(gr.top_block):
-    def __init__(self, dut, noise_level, channel_irs, delta_f):
+    def __init__(self, dut, noise_level, channel_irs, delta_f, add_cp):
         gr.top_block.__init__(self, "Algorithm Arena")
 
         channel_irs= np.array(channel_irs,np.float64)
@@ -169,7 +169,12 @@ class AlgorithmArena(gr.top_block):
 
         pad= np.zeros(9000)
 
-        signal= np.concatenate((pad, preamble, frame))
+        payload= np.concatenate((preamble, frame))
+
+        if add_cp:
+            payload= self.cyclic_prefix(payload)
+
+        signal= np.concatenate((pad, payload))
 
         # Blocks
         self.src = blocks.vector_source_c(signal, False, 1, [])
@@ -191,6 +196,18 @@ class AlgorithmArena(gr.top_block):
         self.connect((self.channel, 0), (dut, 0))
         self.connect((dut, 0), (self.dst_pass, 0))
         self.connect((dut, 1), (self.dst_corr, 0))
+
+    def cyclic_prefix(self, sig):
+        chunks= sig.reshape(len(sig)//512, 512)
+
+        with_cp= tuple(
+            np.concatenate((chunk[-64:], chunk))
+            for chunk in chunks
+        )
+
+        reasembled= np.concatenate(with_cp)
+
+        return(reasembled)
 
     def plot(self):
         corr= np.array(self.dst_corr.data())
@@ -264,8 +281,10 @@ def histogram(arena_gen, iterations, center):
 
     return(hist)
 
-def test_snr(preamble_len, runs, snr):
+def test_snr(preamble_len, runs, snr, with_cp):
     noise_level= db_ampl(-snr)
+
+    offset= 64 if with_cp else 0
 
     print('Working on snr {}dB, {}'.format(snr,noise_level))
 
@@ -273,34 +292,36 @@ def test_snr(preamble_len, runs, snr):
 
     def bs_gen():
         dut= DUTBurstSilence(preamble_len)
-        aa= AlgorithmArena(dut, noise_level, (1,), 0)
+        aa= AlgorithmArena(dut, noise_level, (1,), 0, with_cp)
 
         return(aa)
 
-    algos['bs']= histogram(bs_gen, runs, 10532)
+    algos['bs']= histogram(bs_gen, runs, 10532 + offset)
 
 
     def fqs_gen():
         dut= DUTFreqSweep(preamble_len)
-        aa= AlgorithmArena(dut, noise_level, (1,), 0)
+        aa= AlgorithmArena(dut, noise_level, (1,), 0, with_cp)
 
         return(aa)
 
-    algos['fq']= histogram(fqs_gen, runs, 10534)
+    algos['fq']= histogram(fqs_gen, runs, 10534 + offset)
 
 
     def sc_gen():
         dut= DUTSchCox(preamble_len)
-        aa= AlgorithmArena(dut, noise_level, (1,), 0)
+        aa= AlgorithmArena(dut, noise_level, (1,), 0, with_cp)
 
         return(aa)
 
-    algos['sc']= histogram(sc_gen, runs, 10531)
+    algos['sc']= histogram(sc_gen, runs, 10531 + offset)
 
     return algos
 
-def test_channels(preamble_len, runs, channel):
+def test_channels(preamble_len, runs, channel, with_cp):
     noise_level= db_ampl(-6.0)
+
+    offset= 64 if with_cp else 0
 
     print('Working on channel {}'.format(' | '.join(map(str, channel))))
 
@@ -308,35 +329,37 @@ def test_channels(preamble_len, runs, channel):
 
     def bs_gen():
         dut= DUTBurstSilence(preamble_len)
-        aa= AlgorithmArena(dut, noise_level, channel, 0)
+        aa= AlgorithmArena(dut, noise_level, channel, 0, with_cp)
 
         return(aa)
 
-    algos['bs']= histogram(bs_gen, runs, 10532)
+    algos['bs']= histogram(bs_gen, runs, 10532 + offset)
 
 
     def fqs_gen():
         dut= DUTFreqSweep(preamble_len)
-        aa= AlgorithmArena(dut, noise_level, channel, 0)
+        aa= AlgorithmArena(dut, noise_level, channel, 0, with_cp)
 
         return(aa)
 
-    algos['fq']= histogram(fqs_gen, runs, 10534)
+    algos['fq']= histogram(fqs_gen, runs, 10534 + offset)
 
 
     def sc_gen():
         dut= DUTSchCox(preamble_len)
-        aa= AlgorithmArena(dut, noise_level, channel, 0)
+        aa= AlgorithmArena(dut, noise_level, channel, 0, with_cp)
 
         return(aa)
 
-    algos['sc']= histogram(sc_gen, runs, 10531)
+    algos['sc']= histogram(sc_gen, runs, 10531 + offset)
 
     return algos
 
 
-def test_freqoffs(preamble_len, runs, freq_off):
+def test_freqoffs(preamble_len, runs, freq_off, with_cp):
     noise_level= db_ampl(-6.0)
+
+    offset= 64 if with_cp else 0
 
     print('Working on freq {}'.format(freq_off))
 
@@ -344,33 +367,33 @@ def test_freqoffs(preamble_len, runs, freq_off):
 
     def bs_gen():
         dut= DUTBurstSilence(preamble_len)
-        aa= AlgorithmArena(dut, noise_level, (1, ), freq_off)
+        aa= AlgorithmArena(dut, noise_level, (1, ), freq_off, with_cp)
 
         return(aa)
 
-    algos['bs']= histogram(bs_gen, runs, 10532)
+    algos['bs']= histogram(bs_gen, runs, 10532 + offset)
 
 
     def fqs_gen():
         dut= DUTFreqSweep(preamble_len)
-        aa= AlgorithmArena(dut, noise_level, (1, ), freq_off)
+        aa= AlgorithmArena(dut, noise_level, (1, ), freq_off, with_cp)
 
         return(aa)
 
-    algos['fq']= histogram(fqs_gen, runs, 10534)
+    algos['fq']= histogram(fqs_gen, runs, 10534 + offset)
 
 
     def sc_gen():
         dut= DUTSchCox(preamble_len)
-        aa= AlgorithmArena(dut, noise_level, (1, ), freq_off)
+        aa= AlgorithmArena(dut, noise_level, (1, ), freq_off, with_cp)
 
         return(aa)
 
-    algos['sc']= histogram(sc_gen, runs, 10531)
+    algos['sc']= histogram(sc_gen, runs, 10531 + offset)
 
     return algos
 
-def show_tests(runs=100):
+def show_tests(runs=100, with_cp=False):
     process_pool= Pool(12)
 
     tasks= dict()
@@ -378,17 +401,17 @@ def show_tests(runs=100):
     time_start= time.time()
 
     tasks['nois']= list(
-        process_pool.apply_async(test_snr, (PREAMBLE_LEN, runs, snr))
+        process_pool.apply_async(test_snr, (PREAMBLE_LEN, runs, snr, with_cp))
         for snr in SNR_DB
     )
 
     tasks['chan']= list(
-        process_pool.apply_async(test_channels, (PREAMBLE_LEN, runs, chan))
+        process_pool.apply_async(test_channels, (PREAMBLE_LEN, runs, chan, with_cp))
         for chan in CHANNEL_IRS
     )
 
     tasks['freq']= list(
-        process_pool.apply_async(test_freqoffs, (PREAMBLE_LEN, runs, fo))
+        process_pool.apply_async(test_freqoffs, (PREAMBLE_LEN, runs, fo, with_cp))
         for fo in FREQ_OFFS
     )
 
@@ -425,11 +448,12 @@ def show_tests(runs=100):
 
                 plot_num+= 1
 
-                print('{}_{}_{} = {}'.format(
+                print('\\def\\{}{}{}{}{{{}}}'.format(
                     test_name,
                     subtest_id,
                     algo_name,
-                    ', '.join(map(str, algo_results))
+                    'cp' if with_cp else 'ncp',
+                    ','.join(map(str, algo_results))
                 ))
 
     plt.show()
