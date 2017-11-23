@@ -435,6 +435,10 @@ def show_tests(runs=100, with_cp=False):
         (time_end - time_start) / 60.0
     ))
 
+    # "Should we allow digits in variable names?"
+    # Latex: "Naah"
+    numbers= 'zero one two three four five six seven eight nine'.split()
+
     for (test_name, test_results) in tests.items():
         plt.figure()
         plot_num= 1
@@ -452,9 +456,9 @@ def show_tests(runs=100, with_cp=False):
 
                 plot_num+= 1
 
-                print('\\def\\{}{}{}{}{{{}}}'.format(
+                print('\\def\\{}{}{}{}{{{{{}}}}}'.format(
                     test_name,
-                    subtest_id,
+                    numbers[subtest_id],
                     algo_name,
                     'cp' if with_cp else 'ncp',
                     ','.join('{:2.2f}'.format(r) for r in algo_results)

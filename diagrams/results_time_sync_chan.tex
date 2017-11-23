@@ -1,0 +1,79 @@
+\begin{tikzpicture}
+  \input{diagrams/results_time_sync_common.tex}
+  \input{diagrams/results_time_sync_raw.tex}
+
+  \draw
+  (-1, 1.5) node[anchor=east]{TODO}
+  (-1, -2.5) node[anchor=east]{TODO}
+  (-1, -6.5) node[anchor=east]{TODO}
+  (-1, -10.5) node[anchor=east]{TODO}
+  (-1, -14.5) node[anchor=east]{TODO};
+
+  \draw
+  (4, 3.5) node[anchor=south]{Schmidl \& Cox}
+  (14, 3.5) node[anchor=south]{Burst \& Silence}
+  (24, 3.5) node[anchor=south]{Frequency Sweep};
+
+  % Schmidl & Cox
+  \begin{scope}[shift={(0, 0)}]
+    \plthistogram{\chanzeroscncp}
+  \end{scope}
+
+  \begin{scope}[shift={(0, -4)}]
+    \plthistogram{\chanonescncp}
+  \end{scope}
+
+  \begin{scope}[shift={(0, -8)}]
+    \plthistogram{\chantwoscncp}
+  \end{scope}
+
+  \begin{scope}[shift={(0, -12)}]
+    \plthistogram{\chanthreescncp}
+  \end{scope}
+
+  \begin{scope}[shift={(0, -16)}]
+    \plthistogram{\chanfourscncp}
+  \end{scope}
+
+  % Burst & Silence
+  \begin{scope}[shift={(10, 0)}]
+    \plthistogram{\chanzerobsncp}
+  \end{scope}
+
+  \begin{scope}[shift={(10, -4)}]
+    \plthistogram{\chanonebsncp}
+  \end{scope}
+
+  \begin{scope}[shift={(10, -8)}]
+    \plthistogram{\chantwobsncp}
+  \end{scope}
+
+  \begin{scope}[shift={(10, -12)}]
+    \plthistogram{\chanthreebsncp}
+  \end{scope}
+
+  \begin{scope}[shift={(10, -16)}]
+    \plthistogram{\chanfourbsncp}
+  \end{scope}
+
+  % Frequency Sweep
+  \begin{scope}[shift={(20, 0)}]
+    \plthistogram{\chanzerofqncp}
+  \end{scope}
+
+  \begin{scope}[shift={(20, -4)}]
+    \plthistogram{\chanonefqncp}
+  \end{scope}
+
+  \begin{scope}[shift={(20, -8)}]
+    \plthistogram{\chantwofqncp}
+  \end{scope}
+
+  \begin{scope}[shift={(20, -12)}]
+    \plthistogram{\chanthreefqncp}
+  \end{scope}
+
+  \begin{scope}[shift={(20, -16)}]
+    \plthistogram{\chanfourfqncp}
+  \end{scope}
+\end{tikzpicture}

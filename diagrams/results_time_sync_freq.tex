@@ -1,0 +1,53 @@
+\begin{tikzpicture}
+  \input{diagrams/results_time_sync_common.tex}
+  \input{diagrams/results_time_sync_raw.tex}
+
+  \draw
+  (-1, 1.5) node[anchor=east]{TODO}
+  (-1, -2.5) node[anchor=east]{TODO}
+  (-1, -6.5) node[anchor=east]{TODO};
+
+  \draw
+  (4, 3.5) node[anchor=south]{Schmidl \& Cox}
+  (14, 3.5) node[anchor=south]{Burst \& Silence}
+  (24, 3.5) node[anchor=south]{Frequency Sweep};
+
+  % Schmidl & Cox
+  \begin{scope}[shift={(0, 0)}]
+    \plthistogram{\freqzeroscncp}
+  \end{scope}
+
+  \begin{scope}[shift={(0, -4)}]
+    \plthistogram{\freqonescncp}
+  \end{scope}
+
+  \begin{scope}[shift={(0, -8)}]
+    \plthistogram{\freqtwoscncp}
+  \end{scope}
+
+  % Burst & Silence
+  \begin{scope}[shift={(10, 0)}]
+    \plthistogram{\freqzerobsncp}
+  \end{scope}
+
+  \begin{scope}[shift={(10, -4)}]
+    \plthistogram{\freqonebsncp}
+  \end{scope}
+
+  \begin{scope}[shift={(10, -8)}]
+    \plthistogram{\freqtwobsncp}
+  \end{scope}
+
+  % Frequency Sweep
+  \begin{scope}[shift={(20, 0)}]
+    \plthistogram{\freqzerofqncp}
+  \end{scope}
+
+  \begin{scope}[shift={(20, -4)}]
+    \plthistogram{\freqonefqncp}
+  \end{scope}
+
+  \begin{scope}[shift={(20, -8)}]
+    \plthistogram{\freqtwofqncp}
+  \end{scope}
+\end{tikzpicture}

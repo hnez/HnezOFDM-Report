@@ -1,0 +1,34 @@
+\newcommand{\plthistogram}[1]{
+  \draw[->] (-0.7, 0) -- (8.5, 0);
+  \draw[->] (0, -0.2) -- (0, 2.8);
+
+  \draw[fill=Red,fill opacity=0.8]
+  (-0.59, 0) rectangle
+  ++(0.36, {0.025 * #1[0]});
+
+  \draw
+  (0, 2.500) -- ++(0.1, 0) node[anchor=west]{\small{$\SI{100}{\percent}$}}
+  (0, 1.875) -- ++(0.1, 0) node[anchor=west]{\small{$\SI{75}{\percent}$}}
+  (0, 1.250) -- ++(0.1, 0) node[anchor=west]{\small{$\SI{50}{\percent}$}}
+  (0, 0.625) -- ++(0.1, 0) node[anchor=west]{\small{$\SI{25}{\percent}$}};
+
+  \draw
+  (-0.4, 0) node[anchor=north]{\small{miss}};
+
+  \foreach \x in {1, 2, ..., 21} {
+    \ifthenelse{\equal{\x}{10}}{
+      \draw[fill=Green,fill opacity=0.8]
+      ({0.4 * \x - 0.42}, 0) rectangle
+      ++(0.36, {0.025 * #1[\x]});
+    }{
+      \draw[fill=CornflowerBlue,fill opacity=0.8]
+      ({0.4 * \x - 0.42}, 0) rectangle
+      ++(0.36, {0.025 * #1[\x]});
+    }
+
+    \pgfmathtruncatemacro{\dsamp}{\x - 10}
+
+    \draw
+    ({0.4 * \x - 0.2}, 0) node[anchor=north]{\small{\dsamp}};
+  }
+}
