@@ -279,6 +279,10 @@ def histogram(arena_gen, iterations, center):
         for i in range(start, end)
     )
 
+    acc= sum(hist)
+
+    hist= list(100.0*h/acc for h in hist)
+
     return(hist)
 
 def test_snr(preamble_len, runs, snr, with_cp):
@@ -453,7 +457,7 @@ def show_tests(runs=100, with_cp=False):
                     subtest_id,
                     algo_name,
                     'cp' if with_cp else 'ncp',
-                    ','.join(map(str, algo_results))
+                    ','.join('{:2.2f}'.format(r) for r in algo_results)
                 ))
 
     plt.show()
