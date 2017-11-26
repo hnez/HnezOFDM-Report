@@ -1,9 +1,73 @@
+In order to analyze the performance of the GNURadio blocks
+discussed earlier a set of testcases were devised.
 
-\begin{subchapter}{Start-of-frame estimation}
+The metrics that the testcases were designed to test
+were, firstly, the precision of the tag-placement in
+the time domain in the presence of different disturbances,
+secondly, the precision of the \gls{cfo} estimation
+and finally the effective computational complexity.
+
+\begin{subchapter}{Start-of-frame detection}
+  The first testcase was designed to measures the quality
+  of synchronisation when the signal is disturbed by,
+  noise, frequency offsets or frequency selective channels.
+  The respective results are shown in Figures \ref{img:results_time_sync_nois}
+  to \ref{img:results_time_sync_chan}. \\
+
+  All of these figures compare three different synchronization
+  techniques:
+
+  \begin{description}
+    \item[Schmidl \& Cox]
+      The \acrlong{schcox} Correlator and Tagger, as discussed in the
+      previous chapter.
+
+    \item[Burst \& Silence]
+      A custom GNURadio block that detects a burst in input power
+      followed by an equally long period of silence by calculating the
+      average signal power in two consecutive windows and subtracting the
+      power in the later window from the power of the earlier window.
+
+      The noise floor affects both windows in a roughly equal manner
+      and is thus canceled out.
+
+    \item[Frequency Sweep]
+      Another custom GNURadio block that mixes the input signal
+      with a frequency sweep.
+
+      The synchronization sequency consists of a complementary
+      frequency sweep, such that the mixing of both will result
+      in a constant frequency output.
+
+      The constant frequency results in a constant phase difference
+      between consecutive samples that is used for detection.
+  \end{description}
+
+  % TODO explain the rules
+
+  Figure \ref{img:results_time_sync_nois} shows the effect of
+  different \acrshortpl{snr} on the output of the synchronization
+  methods.
+  The histograms show the distribution of tag positions
+  relative to the actual position of the synchronization
+  sequence.
+  For a perfect synchronization method the histogram would
+  show a single peak in the ``$0$'' bin, indicating that every
+  synchronization sequence was detected without even a single
+  sample of offset.
+
+  A particulary bad method would show a single peak in the
+  ``missed'' bin, indicating that the sequence was missed by
+  more than ten samples or not detected at all.
+
   \figurizefile{diagrams/results_time_sync_nois.tex}
                {img:results_time_sync_nois}
                {Detection time distributions for different \acrshortpl{snr}}
                {1}{H}
+
+  For high \glspl{snr} all of the tested methods produce
+  usable results - tagging most preambles to within a few
+  samples.
 
   \figurizefile{diagrams/results_time_sync_freq.tex}
                {img:results_time_sync_freq}
@@ -42,12 +106,12 @@
       Processor & Benchmark samplerate & Baseline samplerate \\
 
       \hline
-      \parbox[c]{5cm}{\vspace{1mm} Ryzen 5 - 1600 \\ 6 \acrshort{cpu} cores \\ $\SI{3.4}{\giga\hertz}$ \\ Linux 4.13.12-1-ARCH \vspace{1mm}} &
+      \parbox[c]{5cm}{\vspace{1mm} AMD Ryzen 5 - 1600 \\ 6 \acrshort{cpu} cores \\ $\SI{3.4}{\giga\hertz}$ \\ Linux 4.13.12-1-ARCH \vspace{1mm}} &
       \parbox[c]{5cm}{\centering $114 - \SI{133}{\mega\sample\per\second}$} &
       \parbox[c]{5cm}{\centering $190 - \SI{198}{\mega\sample\per\second}$} \\
 
       \hline
-      \parbox[c]{5cm}{\vspace{1mm} Atom x5-Z8350 \\ 4 \acrshort{cpu} cores \\ $\SI{1.6}{\giga\hertz}$ \\ Linux 4.13.12-1-ARCH \vspace{1mm}} &
+      \parbox[c]{5cm}{\vspace{1mm} Intel Atom x5-Z8350 \\ 4 \acrshort{cpu} cores \\ $\SI{1.6}{\giga\hertz}$ \\ Linux 4.13.12-1-ARCH \vspace{1mm}} &
       \parbox[c]{5cm}{\centering $19 - \SI{20}{\mega\sample\per\second}$} &
       \parbox[c]{5cm}{\centering $33 - \SI{34}{\mega\sample\per\second}$} \\
 
