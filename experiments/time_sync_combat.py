@@ -300,7 +300,7 @@ def test_snr(preamble_len, runs, snr, with_cp):
 
         return(aa)
 
-    algos['bs']= histogram(bs_gen, runs, 10532 + offset)
+    algos['bs']= histogram(bs_gen, runs, 10533 + offset)
 
 
     def fqs_gen():
@@ -318,7 +318,7 @@ def test_snr(preamble_len, runs, snr, with_cp):
 
         return(aa)
 
-    algos['sc']= histogram(sc_gen, runs, 10531 + offset)
+    algos['sc']= histogram(sc_gen, runs, 10533 + offset)
 
     return algos
 
@@ -337,7 +337,7 @@ def test_channels(preamble_len, runs, channel, with_cp):
 
         return(aa)
 
-    algos['bs']= histogram(bs_gen, runs, 10532 + offset)
+    algos['bs']= histogram(bs_gen, runs, 10533 + offset)
 
 
     def fqs_gen():
@@ -355,7 +355,7 @@ def test_channels(preamble_len, runs, channel, with_cp):
 
         return(aa)
 
-    algos['sc']= histogram(sc_gen, runs, 10531 + offset)
+    algos['sc']= histogram(sc_gen, runs, 10533 + offset)
 
     return algos
 
@@ -375,7 +375,7 @@ def test_freqoffs(preamble_len, runs, freq_off, with_cp):
 
         return(aa)
 
-    algos['bs']= histogram(bs_gen, runs, 10532 + offset)
+    algos['bs']= histogram(bs_gen, runs, 10533 + offset)
 
 
     def fqs_gen():
@@ -393,7 +393,7 @@ def test_freqoffs(preamble_len, runs, freq_off, with_cp):
 
         return(aa)
 
-    algos['sc']= histogram(sc_gen, runs, 10531 + offset)
+    algos['sc']= histogram(sc_gen, runs, 10533 + offset)
 
     return algos
 

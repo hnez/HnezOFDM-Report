@@ -188,19 +188,21 @@ class FqOffTester(gr.top_block):
             self.lo_down.set_frequency(fq_new)
 
 
-fo= FqOffTester()
+fo= FqOffTester(True)
 fo.run()
 
 actual= np.fromiter((a[1] for a in fo.detects), np.float)
 estim= np.fromiter((a[2] for a in fo.detects), np.float)
 
-def scattman(xax, yax, xopt, yopt, ylim, fname):
+def scattman(xax, yax, xopt, yopt, xlabel, ylabel, ylim, fname):
     fig= Figure()
     canvas= FigureCanvas(fig)
     ax= fig.add_subplot('111')
 
     ax.scatter(xax, yax, s=4)
     ax.plot(xopt, yopt, 'g', linewidth=0.6)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
 
     if ylim is not None:
         x1, x2, y1, y2= ax.axis()
@@ -213,6 +215,7 @@ def scattman(xax, yax, xopt, yopt, ylim, fname):
 scattman(
     actual, estim,
     [3985, 4015], [3985, 4015],
+    '$f_{actual}$ / Hz', '$f_{estimated}$ / Hz',
     None,
     'time_sync_hw_sloped.pdf'
 )
@@ -220,6 +223,7 @@ scattman(
 scattman(
     actual, np.clip(estim - actual, -2, 2),
     [3985, 4015], [0, 0],
+    '$f_{actual}$ / Hz', '$(f_{estimated} - f_{actual})$ / Hz',
     2.1,
     'time_sync_hw_horiz.pdf'
 )

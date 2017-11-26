@@ -1,20 +1,32 @@
-To test the performance of the \acrlong{schcox} algorithm and
-its implementation presented in this thesis a few
-simple competing algorithms and tests were devised.
 
-The
+\begin{subchapter}{Start-of-frame estimation}
+  \figurizefile{diagrams/results_time_sync_nois.tex}
+               {img:results_time_sync_nois}
+               {Detection time distributions for different \acrshortpl{snr}}
+               {0.95}{H}
 
-\figurizefile{diagrams/results_time_sync_nois.tex}
-             {img:results_time_sync_nois}
-             {Detection time distributions for different \acrshortpl{snr}}
-             {0.95}{H}
+  \figurizefile{diagrams/results_time_sync_freq.tex}
+               {img:results_time_sync_freq}
+               {Detection time distributions for different frequency ofssets}
+               {0.95}{H}
 
-\figurizefile{diagrams/results_time_sync_freq.tex}
-             {img:results_time_sync_freq}
-             {Detection time distributions for different frequency ofssets}
-             {0.95}{H}
+  \figurizefile{diagrams/results_time_sync_chan.tex}
+               {img:results_time_sync_chan}
+               {Detection time distributions for different channel models}
+               {0.95}{H}
+\end{subchapter}
 
-\figurizefile{diagrams/results_time_sync_chan.tex}
-             {img:results_time_sync_chan}
-             {Detection time distributions for different channel models}
-             {0.95}{H}
+\begin{subchapter}{\Acrlong{cfo} estimation}
+  \figurizegraphic{diagrams/time_sync_hw_sloped.pdf}
+                  {img:time_sync_hw_sloped}
+                  {Estimated $f_\text{c}$ versus actual $f_\text{c}$}
+                  {0.6}{H}
+
+  \figurizegraphic{diagrams/time_sync_hw_horiz.pdf}
+                  {img:time_sync_hw_horiz}
+                  {Estimation error $\Delta f_\text{c}$ versus $f_\text{c}$}
+                  {0.6}{H}
+\end{subchapter}
+
+\begin{subchapter}{\Acrshort{cpu} load}
+\end{subchapter}
