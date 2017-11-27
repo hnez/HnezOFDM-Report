@@ -45,45 +45,116 @@ and finally the effective computational complexity.
 
   % TODO explain the rules
 
-  Figure \ref{img:results_time_sync_nois} shows the effect of
-  different \acrshortpl{snr} on the output of the synchronization
-  methods.
-  The histograms show the distribution of tag positions
-  relative to the actual position of the synchronization
-  sequence.
-  For a perfect synchronization method the histogram would
-  show a single peak in the ``$0$'' bin, indicating that every
-  synchronization sequence was detected without even a single
-  sample of offset.
+  \begin{subsubchapter}{AWGN Noise}
+    Figure \ref{img:results_time_sync_nois} shows the effect of
+    different \acrshortpl{snr} on the output of the synchronization
+    methods.
+    The histograms show the distribution of tag positions
+    relative to the actual position of the synchronization
+    sequence.
+    For a perfect synchronization method the histogram would
+    show a single peak in the ``$0$'' bin, indicating that every
+    synchronization sequence was detected without even a single
+    sample of offset.
 
-  A particulary bad method would show a single peak in the
-  ``missed'' bin, indicating that the sequence was missed by
-  more than ten samples or not detected at all.
+    A particulary bad method would show a single peak in the
+    ``missed'' bin, indicating that the sequence was missed by
+    more than ten samples or not detected at all.
 
-  \figurizefile{diagrams/results_time_sync_nois.tex}
-               {img:results_time_sync_nois}
-               {Detection time distributions for different \acrshortpl{snr}}
-               {1}{H}
+    \figurizefile{diagrams/results_time_sync_nois.tex}
+                 {img:results_time_sync_nois}
+                 {Detection time distributions for different \acrshortpl{snr}}
+                 {1}{H}
 
-  For high \glspl{snr} all of the tested methods produce
-  usable results - tagging most preambles to within a few
-  samples.
+    For high \glspl{snr} all of the tested methods produced
+    usable results - tagging most preambles to within a few
+    samples.
 
-  \figurizefile{diagrams/results_time_sync_freq.tex}
-               {img:results_time_sync_freq}
-               {Detection time distributions for different frequency ofssets}
-               {1}{H}
+    For deacresing \glspl{snr} the results obtained by the
+    frequency sweep based degraded rather quickly, missing most
+    preambles at a \gls{snr} of just $\SI{0}{\deci\bel}$
+    while the other methods still provide reliable output.
 
-  \figurizefile{diagrams/results_time_sync_chan.tex}
-               {img:results_time_sync_chan}
-               {Detection time distributions for different channel models}
-               {1}{H}
+    The winning method in this test was the rather simple
+    power-level based Burst \& Silence detector, dominating
+    over the more complex Schmidl \& Cox detector.
+    It should be noted however that the detection levels
+    for all methods were tweaked to produce a minimal amount
+    of false positives at low noise levels.
 
-  \figurizefile{diagrams/time_sync_combat_channels.tex}
-               {img:time_sync_combat_channels}
-               {Channel models used in the simulation}
-               {0.7}{H}
+    When tweaking the parameters for different design criteria
+    e.a. a minimal amount of false negatives the Schmidl \& Cox
+    and Burst \& Silence show similar performance while
+    the frequency sweep based approach always provides inferior
+    results.
+  \end{subsubchapter}
 
+  \begin{subsubchapter}{Frequency offset}
+    The second test was designed to test the effect a frequency offset
+    between a transmitter and a receiver has on the detection accuracy
+    of the respective algorithms.
+
+    In this test the baseband signals containing the synchronization
+    sequences were mixed up using a signal of $n\si{\percent}$ the
+    baseband nyquist frequency resulting in a cyclic frequency shift.
+    The results are shown in figure \ref{img:results_time_sync_freq}.
+
+    \figurizefile{diagrams/results_time_sync_freq.tex}
+                 {img:results_time_sync_freq}
+                 {Detection time distributions for different frequency ofssets}
+                 {1}{H}
+
+    Figure \ref{img:results_time_sync_freq} shows that none of the
+    methods express any dependency on cyclic frequency shifts.
+    This is to be expected as none of the methods actually use
+    the absolute frequency information contained in the preambles
+    for timing synchronization.
+  \end{subsubchapter}
+
+  \begin{subsubchapter}{Frequency-selective channel}
+    A major application for multi-carrier based techniques
+    are transmissions over frequency-selective channels
+    like reflection-heavy urban areas.
+
+    Good performance in these usecases is thus also a
+    requirement for multi-carrier synchronization systems.
+
+    To characterize the performance of the synchronization
+    methods at hand a selection of increasingly hostile
+    channels were constructing different impulse responses.
+
+    The frequency responses of these channels are shown
+    in the linear plots in figure \ref{img:time_sync_combat_channels}.
+
+    \figurizefile{diagrams/time_sync_combat_channels.tex}
+                 {img:time_sync_combat_channels}
+                 {Channel models used in the simulation}
+                 {0.7}{H}
+
+    The first channel was completely flat, the impulse resonse
+    consisted of only a single dirac impulse.
+
+    The second channel roughly resembled the behavior of
+    an indoor communication with a direct line of sight.
+    The impulse response consisted of a large peak, representing the
+    direct line of sight, followed by gradual falloff and a
+    highly attenuated reflection pulse.
+
+    The remaining channels were intentionally designed to
+    be hostile by placing large peaks in the impulse response
+    over a wide span of time.
+
+    The results of using the different algorithms, when used over these
+    channels, are shown in figure \ref{img:results_time_sync_chan}.
+
+    \figurizefile{diagrams/results_time_sync_chan.tex}
+                 {img:results_time_sync_chan}
+                 {Detection time distributions for different channel models}
+                 {1}{H}
+
+    % TODO: stuff
+
+    \end{subsubchapter}
 \end{subchapter}
 
 \begin{subchapter}{\Acrlong{cfo} estimation}
