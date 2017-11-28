@@ -132,7 +132,7 @@ and finally the effective computational complexity.
                  {0.7}{H}
 
     The first channel was completely flat, the impulse resonse
-    consisted of only a single dirac impulse.
+    consisted of only a single pulse.
 
     The second channel roughly resembled the behavior of
     an indoor communication with a direct line of sight.
@@ -144,7 +144,7 @@ and finally the effective computational complexity.
     be hostile by placing large peaks in the impulse response
     over a wide span of time.
 
-    The results of using the different algorithms, when used over these
+    The results for the different algorithms, when used over these
     channels, are shown in figure \ref{img:results_time_sync_chan}.
 
     \figurizefile{diagrams/results_time_sync_chan.tex}
@@ -152,24 +152,146 @@ and finally the effective computational complexity.
                  {Detection time distributions for different channel models}
                  {1}{H}
 
-    % TODO: stuff
+    Both custom synchronization techniques failed dramatically
+    when used over frequency-selective channels.
 
-    \end{subsubchapter}
+    In the case of the Burst \& Silence detector verifying the
+    plausibility of these results is quite simple as any
+    additional non-zero value in the impulse response in addition
+    to the main pulse leads to parts of the burst half of the
+    preamble ``bleeding'' into the silent half, reducing the
+    difference in input power.
+  \end{subsubchapter}
 \end{subchapter}
 
 \begin{subchapter}{\Acrlong{cfo} estimation}
+  In addition to the previously analyzed synchronization in time
+  the \gls{schcox} algorithm also provides an estimation of
+  the difference in carrier frequency between receiver and
+  transmitter the \gls{cfo}.
+
+  As \gls{schcox} was the only method presented in this thesis
+  thus far providing a means of estimating the \gls{cfo}
+  its performance was characterized in isolation.
+
+  The test was designed as an actual-hardware test
+  and used common audio hardware.
+  A speaker and a microphone were placed on opposite
+  sides of a small room. The speaker periodically broadcasted
+  \gls{schcox} preambles consisting of two 256 symbols long
+  sequences, occupying a bandwith of $\SI{4410}{\hertz}$
+  around a carrier of $\SI{4000}{\hertz}$.
+  These preambles were received by the microphone and mixed
+  down by an LO-frequency between $\SI{3985}{\hertz}$ and $\SI{4015}{\hertz}$
+  the \gls{schcox} algorithm was then used to estimate
+  this carrier-frequency offset of $\pm\SI{15}{\hertz}$.
+
+  The playback volume was adjusted to the lowest level
+  that still provided reliable preamble detection at the receiver.
+
+  The results are shown in figure \ref{img:time_sync_hw_sloped},
+  which depicts the estimated LO-frequencies over the
+  actual LO-frequencies used to mix down the signal.
+  The measurements are depicted as blue dots while a
+  green line shows the identity mapping between estimated
+  and actual frequencies.
+
   \figurizegraphic{diagrams/time_sync_hw_sloped.pdf}
                   {img:time_sync_hw_sloped}
                   {Estimated $f_\text{c}$ versus actual $f_\text{c}$}
                   {0.8}{H}
 
+  An obvious first observation is that for frequency offsets of
+  more than about $\pm\SI{8}{\hertz}$ the estimated frequencies
+  were widely off from the expected values.
+
+  This is a direct result of using the output phase
+  of the \gls{schcox} algorithm for frequency estimation
+  as the phase is periodic in $(-\pi, \pi]$ leading to
+  ambiguities in the phase-to-frequency mapping.
+
+  The maxium detectable frequency offset is thus
+  a criterium in the design of a \gls{schcox}
+  based system.
+
+  To analyze the \gls{cfo} performance under the assumtion
+  of unambiguous frequency offsets the same measurements
+  as in figure \ref{img:time_sync_hw_sloped} where plotted
+  again, this time showing the error in frequency estimation
+  plotted over the actual carrier frequency.
+  The resulting diagram is shown in
+  figure \ref{img:time_sync_hw_horiz}.
+  The values were clipped to a range of $[-2, 2]$.
+
   \figurizegraphic{diagrams/time_sync_hw_horiz.pdf}
                   {img:time_sync_hw_horiz}
                   {Estimation error $\Delta f_\text{c}$ versus $f_\text{c}$}
                   {0.8}{H}
+
+  The figure shows that the carrier frequency were
+  estimated to within a range of $\pm\SI{0.7}{\hertz}$.
+  The carrier spacings in a multi-carrier system
+  would have to designed to tollerate residual
+  frequency offsets in that region.
 \end{subchapter}
 
 \begin{subchapter}{\Acrshort{cpu} load}
+  A major design goal of the \gls{schcox} implementation
+  presentated in this thesis was processing speed on
+  general-purpose computing hardware.
+  To facilitate this goal various optimizations were
+  made in the software implementation.
+
+  To test the processing speed of the
+  \gls{schcox} correlator and -tagger blocks
+  a custom GNURadio block was implemented that repeatedly outputs
+  a preset sequence over and over again while keeping
+  track of the number of samples outputted per unit of time.
+
+  The overall processing speed of a GNURadio program
+  is determined by the slowest block in the flowgraph.
+  This is usually a hardware device that is limited in
+  the number of samples it produces by its samplerate.
+
+  In the absence of hardware devices, meaning a pure
+  simulation scenario, the flowgraph will run as fast
+  as possible, only limited by the processing speed
+  of the computing hardware.
+
+  For this test the custom speed measuring block
+  introduced earlier was tasked to output spurious
+  \gls{schcox} sequences overlayed with gaussian noise.
+
+  This measuring source was then connect to the
+  \gls{schcox} correlator block in series with
+  the \gls{schcox} tagger block.
+  The outputs of the tagger were dumped using
+  null sink blocks which do not perform any processing
+  on their inputs and do not produce any output.
+
+  This program was then executed on two reasonably
+  recent computers containing \glspl{cpu} designed
+  with different targets in mind.
+
+  The first \gls{cpu} is an AMD Ryzen 5 model intended
+  for the mid-to-high range desktop PC market where power
+  consumtion is a minor concern.
+  It provides, among others, the avx2 group of instructions
+  that allow processing multiple values in a single processor
+  instruction (\acrshort{simd}).
+
+  The second \gls{cpu} is an Intel Atom model intended
+  for very low power laptop and tablet computers.
+  To reduce the power consumption and die-area
+  of this \gls{cpu} only the sse to sse4.2 line of
+  instructions were implemented instead of the
+  more powerful avx2 \acrshort{simd} instruction present
+  in the desktop \gls{cpu}. \\
+
+  The samplerates archieved in this test are shown
+  in \autoref{tab:cpuload} under the ``Benchmark samplerate''
+  column.
+
   \begin{table}[H]
     \centering
     \begin{tabular}{| l | c | c |}
@@ -191,4 +313,39 @@ and finally the effective computational complexity.
     \caption{achievable samplerates for different processors}
     \label{tab:cpuload}
   \end{table}
+
+  The table also contains a ``Baseline samplerate'' column.
+  This column shows the samplerates obtained when the flowgraph
+  is executed without the \gls{schcox} blocks, leaving only
+  the measuring source and the null sinks to dump the
+  output samples.
+
+  This baseline figure is useful to make sure that the
+  processing speed is actually limited by the \gls{schcox} blocks.
+  As the baseline samplerates were substantially larger
+  than the bechmark rates it is relatively safe that
+  the processing speed was indeed limited by the \gls{schcox} blocks
+  and the measured performance was a characteristic of these blocks. \\
+
+  Another observation the benchmarking allowed can be seen
+  in \autoref{img:benchmarkhtop}: only a small number of
+  processor cores are utilized by the benchmarking program
+  (the processor utilization is shown in the topmost 12 bargraphs).
+
+  \figurizegraphic{images/benchmark_htop.png}
+                  {img:benchmarkhtop}
+                  {Processor load while executing the benchmarking flowgraph}
+                  {0.95}
+                  {H}
+
+  This is due to the correlator block and the tagger block running
+  in a single thread each allowing them to utilize at most
+  a single processor core at once, respectively.
+
+  While utilizing more \gls{cpu} cores could possibly
+  result in a higher samplerate, the limitation to at most
+  two cores utilized by \gls{schcox} components can
+  also be seen as a feature, whereby the remaining cores
+  may still be used for other processing blocks without impacting
+  the overall archievable samplerate.
 \end{subchapter}
