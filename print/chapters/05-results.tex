@@ -14,26 +14,27 @@ and finally the effective computational complexity.
   The respective results are shown in Figures \ref{img:results_time_sync_nois}
   to \ref{img:results_time_sync_chan}. \\
 
-  All of these figures compare three different synchronization
+  \noindent All of these figures compare three different synchronization
   techniques:
 
   \begin{description}
-    \item[Schmidl \& Cox]
+    \item[Schmidl \& Cox:]
       The \acrlong{schcox} Correlator and Tagger, as discussed in the
-      previous chapter.
+      previous chapters.
+      The Cross-correlation tagger component was not used in these tests.
 
-    \item[Burst \& Silence]
+    \item[Burst \& Silence:]
       A custom GNURadio block that detects a burst in input power
       followed by an equally long period of silence by calculating the
       average signal power in two consecutive windows and subtracting the
-      power in the later window from the power of the earlier window.
+      energy in the later window from the energy of the earlier window.
 
       The noise floor affects both windows in a roughly equal manner
       and is thus canceled out.
 
-    \item[Frequency Sweep]
+    \item[Frequency Sweep:]
       Another custom GNURadio block that mixes the input signal
-      with a frequency sweep.
+      with a repeating frequency sweep.
 
       The synchronization sequency consists of a complementary
       frequency sweep, such that the mixing of both will result
@@ -43,9 +44,22 @@ and finally the effective computational complexity.
       between consecutive samples that is used for detection.
   \end{description}
 
-  % TODO explain the rules
+  The algorithms were tested under these common conditions:
 
-  \begin{subsubchapter}{AWGN Noise}
+  \begin{itemize}
+    \item
+      The preambles were followed by random \gls{ofdm} symbols
+
+    \item
+      Each algortihm used a preamble of 512 symbols
+
+    \item
+      The energy of the whole preamble was equal for each
+      algorithm and equal to the average energy of the \gls{ofdm}
+      symbols
+  \end{itemize}
+
+  \begin{subsubchapter}{AWG Noise}
     Figure \ref{img:results_time_sync_nois} shows the effect of
     different \acrshortpl{snr} on the output of the synchronization
     methods.
@@ -71,19 +85,20 @@ and finally the effective computational complexity.
     samples.
 
     For deacresing \glspl{snr} the results obtained by the
-    frequency sweep based degraded rather quickly, missing most
-    preambles at a \gls{snr} of just $\SI{0}{\deci\bel}$
-    while the other methods still provide reliable output.
+    frequency sweep based method degraded rather quickly,
+    already missing most
+    preambles at an \gls{snr} of just $\SI{0}{\deci\bel}$
+    while the other methods still provided reliable output.
 
     The winning method in this test was the rather simple
     power-level based Burst \& Silence detector, dominating
     over the more complex Schmidl \& Cox detector.
-    It should be noted however that the detection levels
+    It should be noted however that the detection hysteresis levels
     for all methods were tweaked to produce a minimal amount
     of false positives at low noise levels.
 
     When tweaking the parameters for different design criteria
-    e.a. a minimal amount of false negatives the Schmidl \& Cox
+    e.g. a minimal amount of false negatives the Schmidl \& Cox
     and Burst \& Silence show similar performance while
     the frequency sweep based approach always provides inferior
     results.
@@ -91,7 +106,7 @@ and finally the effective computational complexity.
 
   \begin{subsubchapter}{Frequency offset}
     The second test was designed to test the effect a frequency offset
-    between a transmitter and a receiver has on the detection accuracy
+    between transmitters and receivers has on the detection accuracy
     of the respective algorithms.
 
     In this test the baseband signals containing the synchronization
@@ -121,7 +136,8 @@ and finally the effective computational complexity.
 
     To characterize the performance of the synchronization
     methods at hand a selection of increasingly hostile
-    channels were constructing different impulse responses.
+    channels were constructed by designing different
+    impulse responses.
 
     The frequency responses of these channels are shown
     in the linear plots in figure \ref{img:time_sync_combat_channels}.
@@ -158,9 +174,9 @@ and finally the effective computational complexity.
     In the case of the Burst \& Silence detector verifying the
     plausibility of these results is quite simple as any
     additional non-zero value in the impulse response in addition
-    to the main pulse leads to parts of the burst half of the
-    preamble ``bleeding'' into the silent half, reducing the
-    difference in input power.
+    to the main pulse leads to parts of the burst-half of the
+    preamble ``bleeding'' into the silent-half, reducing the
+    difference in energy between the windows.
   \end{subsubchapter}
 \end{subchapter}
 
@@ -168,10 +184,10 @@ and finally the effective computational complexity.
   In addition to the previously analyzed synchronization in time
   the \gls{schcox} algorithm also provides an estimation of
   the difference in carrier frequency between receiver and
-  transmitter the \gls{cfo}.
+  transmitter, the \acrfull{cfo}.
 
   As \gls{schcox} was the only method presented in this thesis
-  thus far providing a means of estimating the \gls{cfo}
+  providing a means of estimating the \gls{cfo}
   its performance was characterized in isolation.
 
   The test was designed as an actual-hardware test
@@ -206,7 +222,7 @@ and finally the effective computational complexity.
   were widely off from the expected values.
 
   This is a direct result of using the output phase
-  of the \gls{schcox} algorithm for frequency estimation
+  of the \gls{schcox} algorithm for frequency estimation,
   as the phase is periodic in $(-\pi, \pi]$ leading to
   ambiguities in the phase-to-frequency mapping.
 
@@ -228,11 +244,11 @@ and finally the effective computational complexity.
                   {Estimation error $\Delta f_\text{c}$ versus $f_\text{c}$}
                   {0.8}{H}
 
-  The figure shows that the carrier frequency were
+  The figure shows that the carrier frequencies were
   estimated to within a range of $\pm\SI{0.7}{\hertz}$.
   The carrier spacings in a multi-carrier system
-  would have to designed to tollerate residual
-  frequency offsets in that region.
+  would have to be designed to tollerate these residual
+  frequency offsets.
 \end{subchapter}
 
 \begin{subchapter}{\Acrshort{cpu} load}
@@ -240,13 +256,13 @@ and finally the effective computational complexity.
   presentated in this thesis was processing speed on
   general-purpose computing hardware.
   To facilitate this goal various optimizations were
-  made in the software implementation.
+  made in the software implementation. \\
 
   To test the processing speed of the
   \gls{schcox} correlator and -tagger blocks
   a custom GNURadio block was implemented that repeatedly outputs
-  a preset sequence over and over again while keeping
-  track of the number of samples outputted per unit of time.
+  a preset sequence over and over while keeping
+  track of the number of samples produced per unit of time. \\
 
   The overall processing speed of a GNURadio program
   is determined by the slowest block in the flowgraph.
@@ -256,7 +272,7 @@ and finally the effective computational complexity.
   In the absence of hardware devices, meaning a pure
   simulation scenario, the flowgraph will run as fast
   as possible, only limited by the processing speed
-  of the computing hardware.
+  of the computing hardware. \\
 
   For this test the custom speed measuring block
   introduced earlier was tasked to output spurious
@@ -270,26 +286,26 @@ and finally the effective computational complexity.
   on their inputs and do not produce any output.
 
   This program was then executed on two reasonably
-  recent computers containing \glspl{cpu} designed
-  with different targets in mind.
+  recent computers, containing \glspl{cpu} designed
+  with different usecases in mind.
 
   The first \gls{cpu} is an AMD Ryzen 5 model intended
-  for the mid-to-high range desktop PC market where power
+  for the mid-to-high range Desktop PC market where power
   consumtion is a minor concern.
-  It provides, among others, the avx2 group of instructions
+  It provides, among others, the \acrshort{avx2} group of instructions
   that allow processing multiple values in a single processor
   instruction (\acrshort{simd}).
 
   The second \gls{cpu} is an Intel Atom model intended
   for very low power laptop and tablet computers.
   To reduce the power consumption and die-area
-  of this \gls{cpu} only the sse to sse4.2 line of
+  of this \gls{cpu} only the SSE to \acrshort{sse42} line of
   instructions were implemented instead of the
-  more powerful avx2 \acrshort{simd} instruction present
-  in the desktop \gls{cpu}. \\
+  more powerful \acrshort{avx2} \acrshort{simd} instruction present
+  in the Desktop \gls{cpu}. \\
 
   The samplerates archieved in this test are shown
-  in \autoref{tab:cpuload} under the ``Benchmark samplerate''
+  in \autoref{tab:cpuload} in the ``Benchmark samplerate''
   column.
 
   \begin{table}[H]
@@ -315,21 +331,21 @@ and finally the effective computational complexity.
   \end{table}
 
   The table also contains a ``Baseline samplerate'' column.
-  This column shows the samplerates obtained when the flowgraph
+  This column contains the samplerates obtained when the flowgraph
   is executed without the \gls{schcox} blocks, leaving only
   the measuring source and the null sinks to dump the
   output samples.
 
-  This baseline figure is useful to make sure that the
+  This baseline figure is used to make verify that the
   processing speed is actually limited by the \gls{schcox} blocks.
   As the baseline samplerates were substantially larger
-  than the bechmark rates it is relatively safe that
+  than the bechmark rates it is relatively certain that
   the processing speed was indeed limited by the \gls{schcox} blocks
   and the measured performance was a characteristic of these blocks. \\
 
   Another observation the benchmarking allowed can be seen
-  in \autoref{img:benchmarkhtop}: only a small number of
-  processor cores are utilized by the benchmarking program
+  in \autoref{img:benchmarkhtop}: only a small number of the available
+  processor cores were actually utilized by the benchmarking program
   (the processor utilization is shown in the topmost 12 bargraphs).
 
   \figurizegraphic{images/benchmark_htop.png}
@@ -339,13 +355,13 @@ and finally the effective computational complexity.
                   {H}
 
   This is due to the correlator block and the tagger block running
-  in a single thread each allowing them to utilize at most
+  in a single thread each, allowing them to utilize at most
   a single processor core at once, respectively.
 
   While utilizing more \gls{cpu} cores could possibly
   result in a higher samplerate, the limitation to at most
-  two cores utilized by \gls{schcox} components can
+  two cores used by \gls{schcox} components can
   also be seen as a feature, whereby the remaining cores
-  may still be used for other processing blocks without impacting
-  the overall archievable samplerate.
+  may still be used for other processing blocks without
+  negatively impacting the overall archievable samplerate.
 \end{subchapter}

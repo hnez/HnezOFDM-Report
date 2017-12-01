@@ -4,17 +4,17 @@ synchronization algortihm and to transfer it into an actually
 useable software product. \\
 
 The result of this work is XFDMSync \cite{xfdmsyncweb},
-a set of GNURadio processing blocks useful for multi-carrier
+a set of GNURadio processing blocks to be used for multi-carrier
 synchronization tasks.
 
 Writing this piece of software imposed some interesting
-challenges not commonly seen in academic software development
+challenges not commonly seen in academic software development,
 like concentrating on interoperability with an existing
 software framework and spending a large proportion of
 development time on optimizing for maximum data throughput. \\
 
 As a result of this efford the blocks should be usable
-by the GNURadio userbase to synchronize onto
+by the general GNURadio userbase to synchronize onto
 reasonably high-datarate data-streams. \\
 
 Another aspect of this project was to quantify
@@ -27,10 +27,11 @@ well as the computational throughput.
 The components fared well in all of these tests
 when compared to more naive synchronization
 methods and provided sufficient throughput
-even for demanding applications like realtime Wifi frame
+even for demanding applications like realtime WiFi frame
 detection. \\
 
 Some aspects that were not explored in depth
+and could be targets of future research work
 were the optimization of detection parameters
 like threshold levels for specific applications
 or hardware tests on actual software-defined radio
