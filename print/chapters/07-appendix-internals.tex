@@ -87,7 +87,7 @@ without having to fear race conditions on shared data. \\
   inputs.
   The ``Signal Source'' is executed and produces some
   output values that it puts into ``Buffer A'', it is assumed
-  that the block was not able to fill the complete buffer.
+  that the block is not able to fill the complete buffer.
   The states of the buffers after the ``Signal Source''
   block is executed is shown in figure \ref{img:gr_round_buffers_b}. \\
 
@@ -123,7 +123,7 @@ without having to fear race conditions on shared data. \\
   The scheduling decisions in this chapter are choosen to be
   as illustrative as possible. In an actual flowgraph there are
   further considerations to be made, like the possibility of scheduling
-  multiple blocks concurrently on machines with multiple \gls{cpu} cores,
+  multiple blocks concurrently on machines with multiple \gls{cpu} cores or
   buffers with multiple readers or multiple block producing data
   in the same scheduling cycle.
 \end{subchapter}
@@ -142,10 +142,10 @@ without having to fear race conditions on shared data. \\
                {Filling a memory region}
                {0.7}{H}
 
-  A problem arrises when the block should write or read
+  A problem arrises when the block is asked to write or read
   at the end of the buffer.
   As the buffer is circular reads and writes beyond the
-  end of the buffer should wrap to addresses at the start of the
+  end of the buffer have to be wrapped to addresses at the start of the
   buffer.
 
   Figure \ref{img:gr_rb_mmap_b} shows a situation where
@@ -176,9 +176,9 @@ without having to fear race conditions on shared data. \\
   right after one another \cite{grrdbufmmap}.
 
   This leads to a memory layout like in figure \ref{img:gr_rb_mmap_d}.
-  Reads and writes to addresses \texttt{0x1000} to \texttt{0x1fff} in the program
-  will be redirect to the same physical memory as reads/writes to addresses
-  \texttt{0x0000} to \texttt{0x0fff} by the computers \gls{mmu}.
+  Reads and writes to addresses \texttt{0x1000} - \texttt{0x1fff} in the program
+  are redirect to the same physical memory as reads/writes to addresses
+  \texttt{0x0000} - \texttt{0x0fff} by the computers \gls{mmu}.
 
   \figurizefile{diagrams/gr_rb_mmap_d.tex}
                {img:gr_rb_mmap_d}
