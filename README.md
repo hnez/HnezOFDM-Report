@@ -15,7 +15,8 @@ An exception to the statement above is the
 [`latexrun`][www_latexrun] script by Austin Clements
 which is licensed under the MIT license.
 
-Another exception is the file `theme/antlogo_en.pdf`
+Another exception are the files `theme/antlogo_en.pdf`
+and `print/Legal.pdf`
 for which the license status is unknown and which
 may thus not be used in derived works.
 
