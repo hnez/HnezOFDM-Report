@@ -8,6 +8,9 @@
 \begin{document}
   \input{chapters/00-title-page}
 
+  \newpage
+  \tableofcontents
+
   \begin{topchapter}{Abstract}
     \input{chapters/01-abstract}
   \end{topchapter}
@@ -16,24 +19,28 @@
     \input{chapters/02-introduction}
   \end{topchapter}
 
+  \begin{topchapter}{Theoretical background}
+    \input{chapters/03-theory}
+  \end{topchapter}
+
   \begin{topchapter}{GNURadio}
-    \input{chapters/03-gnuradio-modules}
+    \input{chapters/04-gnuradio-modules}
   \end{topchapter}
 
   \begin{topchapter}{\acrlong{schcox} detector implementation}
-    \input{chapters/04-sc-implementation}
+    \input{chapters/05-sc-implementation}
   \end{topchapter}
 
   \begin{topchapter}{Results}
-    \input{chapters/05-results}
+    \input{chapters/06-results}
   \end{topchapter}
 
   \begin{topchapter}{Conclusion}
-    \input{chapters/06-conclusion}
+    \input{chapters/07-conclusion}
   \end{topchapter}
 
   \begin{topchapter}{Appendix - GNURadio internals}
-    \input{chapters/07-appendix-internals.tex}
+    \input{chapters/08-appendix-internals.tex}
   \end{topchapter}
 
   \newpage
@@ -41,6 +48,6 @@
   \printbibliography
 
   \vfill
-  \input{chapters/08-license.tex}
+  \input{chapters/09-license.tex}
   \includepdf[pages=-]{Legal.pdf}
 \end{document}
