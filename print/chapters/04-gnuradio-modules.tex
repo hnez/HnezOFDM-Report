@@ -1,11 +1,11 @@
-GNURadio \cite{gnuradioweb} is a set of free software \cite{fsffreeweb}
+GNU Radio \cite{gnuradioweb} is a set of free software \cite{fsffreeweb}
 tools that are useful for building and simulating radio systems on
 generic computer hardware.
-This chapter presents GNURadio in general, the different interfaces
-to GNURadio and the anatomy of a GNURadio module.
+This chapter presents GNU Radio in general, the different interfaces
+to GNU Radio and the anatomy of a GNU Radio module.
 
-\begin{subchapter}{GNURadio Companion}
-  The first point of contact for most new GNURadio users
+\begin{subchapter}{GNU Radio Companion}
+  The first point of contact for most new GNU Radio users
   is usually the \gls{grc}, a program that lets
   users design signal flowgraphs in a graphical way.
   \Gls{grc}'s main interface is shown in
@@ -25,7 +25,7 @@ to GNURadio and the anatomy of a GNURadio module.
   is executed, a window opens containing the output of
   these instruments.
   \autoref{img:gnuradio_gui} shows such a window, containing
-  a \texttt{QT GUI Time Sink}, a GNURadio oscilloscope. \\
+  a \texttt{QT GUI Time Sink}, a GNU Radio oscilloscope. \\
 
   \figurizegraphic{images/gnuradio_gui.png}
                   {img:gnuradio_gui}
@@ -57,13 +57,13 @@ to GNURadio and the anatomy of a GNURadio module.
                   {0.6}{H}
 \end{subchapter}
 
-\begin{subchapter}{GNURadio native programming interfaces}
+\begin{subchapter}{GNU Radio native programming interfaces}
   While \gls{grc} is a great tool to experiment with signals,
   filters and prebuilt decoders, more advanced processing
   often requires writing custom processing blocks in, more flexible,
   textual programming languages. \\
 
-  GNURadio provides two native interfaces to write custom
+  GNU Radio provides two native interfaces to write custom
   blocks in, C++ and Python 2\footnote{There is some work done
   in supporting Python 3, but as of the time of writing there is no
   mainline support for it.}.
@@ -71,7 +71,7 @@ to GNURadio and the anatomy of a GNURadio module.
   for, while the C++ will usually provide better processing performance,
   as the code using it is compiled to native processor instructions.
   These tradeoffs have to be considered when writing a
-  new GNURadio processing block.
+  new GNU Radio processing block.
 
   \begin{subsubchapter}{Python-interface}
     Listing \ref{lst:gnuradio_companion_minimal} shows a block written
@@ -83,10 +83,10 @@ to GNURadio and the anatomy of a GNURadio module.
     do not expose any input or output ports and do not perform their own
     signal processing, instead they are used to hierarchically connect
     other blocks to form a processing graph.
-    A typical GNURadio program will contain one top block that is
+    A typical GNU Radio program will contain one top block that is
     used to setup the signal processing chain.
 
-    There are also some other base classes from which GNURadio
+    There are also some other base classes from which GNU Radio
     blocks can be derived\cite{grblockscodingguide}:
 
     \begin{description}
@@ -160,7 +160,7 @@ to GNURadio and the anatomy of a GNURadio module.
 
     \lstinputlisting[numbers=left, basicstyle=\scriptsize,
                      numbersep=5pt, language=Python,
-                     caption=Using GNURadio from Python,
+                     caption=Using GNU Radio from Python,
                      label=lst:gnuradio_companion_minimal,
                      captionpos=b, float]
                     {listings/gnuradio_companion_minimal.py}
@@ -168,7 +168,7 @@ to GNURadio and the anatomy of a GNURadio module.
   \end{subsubchapter}
 
   \begin{subsubchapter}{C++-Interface}
-    Most of GNURadio's backend code is not written in Python
+    Most of GNU Radio's backend code is not written in Python
     but in C++, as it provides lower level access to the computer
     memory and better computing performance. \\
 
@@ -214,7 +214,7 @@ to GNURadio and the anatomy of a GNURadio module.
     The actual signal processing for the demonstrated block
     is performed in the \texttt{work} method, starting in line
     \texttt{29}. The work method is passed the following arguments
-    by the underlying GNURadio logic:
+    by the underlying GNU Radio logic:
 
     \begin{description}
       \item[\texttt{noutput\_items}]
