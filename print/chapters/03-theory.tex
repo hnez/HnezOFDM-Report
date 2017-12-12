@@ -348,3 +348,60 @@ exact timing synchronization between transmitters and
 receivers makes the \acrshort{schcox} algorithm especially useful
 in multi-carrier scenarios where carriers are spaced tightly and
 frequency offsets lead to interference between carriers.
+
+\begin{subchapter}{Cross-correlation based preamble detection}
+  To further improve the accurcacy of the synchroniazion in time
+  a cross-correlation based approach can be used where the cross-correlation
+  between the input samples and a stored reference-preamble is
+  calculated.
+  A flow diagram and an exemplary output of a cross-correlation
+  applied to an input stream and a stored preamble are shown
+  in the dotted segment in \autoref{img:xcorr_theory}. \\
+
+  \figurizefile{diagrams/xcorr_theory.tex}
+               {img:xcorr_theory}
+               {Improved synchronization in time using cross- and auto-correlation}
+               {1}{H}
+
+  In addition to the center peak the cross-correlation output
+  in \autoref{img:xcorr_theory} also shows two additional side-peaks.
+  These side-peaks occur half the preamble length left and right
+  of the main-peak and are a result of the repeating nature of
+  the preamble. \\
+
+  A method to suppress these side-peaks is to use the auto-correlation
+  output of the \gls{schcox} detector and to multiply it with the
+  output of the cross-correlation\cite{awoseyila}.
+
+  This effectively masks out the side-peaks and leads to an output as
+  shown in the rightmost diagram in \autoref{img:xcorr_theory} containing
+  a single sharp peak that can be used to accurately synchronize
+  onto the preamble.
+\end{subchapter}
+
+\begin{subchapter}{CAZAC sequences}
+  In order for the cross-correlation based synchronization technique
+  introduced in the previous subsection to work optimally the
+  autocorrelation of the preamble should be minimal for time-offsets $\Delta t$
+  where $\abs{\Delta t} \neq \frac{N}{2}$. \\
+
+  A class of sequences where this requirement is fulfiled are
+  \gls{cazac} waveforms.
+  One class of sequences in this \gls{cazac} class are
+  Zadoff-Chu sequences\cite{zadoffchu},
+  constructed using \autoref{eq:zchu}, where
+  $n \in [0, N_\text{ZC})$, $u \in [0, N_\text{ZC})$,
+  $N_\text{ZC}$ and $u$ are relatively prime, $q \in \mathbb{Z}$
+  and $N_\text{ZC}$ is the length of the sequence\cite{zcwiki}.
+
+  \begin{equation}
+    \label{eq:zchu}
+    x_\text{u}(n)= e^{- \frac{j \pi u n \left( n + 1 + 2q \right) }{N_\text{ZC}}}
+  \end{equation}
+
+  A property of \gls{cazac} sequences in general is that
+  their autocorrelation is zero for $\Delta t \neq 0$.
+  So if one constructs a \gls{schcox} preamble by repeating
+  a \gls{cazac} sequence the autocorrelation is
+  zero for $\abs{\Delta t} \neq \frac{N}{2}$.
+\end{subchapter}

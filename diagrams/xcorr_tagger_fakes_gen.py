@@ -52,6 +52,11 @@ sync_padded[(PADDEDLEN-SCLEN)//2:(PADDEDLEN+SCLEN)//2]= sync_seq
 
 print_pdf('xcorr_tagger_sync_padded.pdf', sync_padded)
 
+sc_corr= abs(sync_in_noise_padded[128:] * sync_in_noise_padded[:-128].conj())
+sc= np.convolve(sc_corr, np.ones(128))
+sc_pad= np.concatenate((np.zeros(512), sc, np.zeros(512)))
+print_pdf('xcorr_sc.pdf', sc_pad)
+
 find_max= np.correlate(sync_seq, sync_in_noise)
 find_max_padded= np.zeros(PADDEDLEN)
 
