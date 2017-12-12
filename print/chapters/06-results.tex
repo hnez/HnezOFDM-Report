@@ -59,7 +59,7 @@ and finally the effective computational complexity.
       symbols
   \end{itemize}
 
-  \begin{subsubchapter}{AWG Noise}
+  \begin{subsubchapter}{AWGN Channel}
     Figure \ref{img:results_time_sync_nois} shows the effect of
     different \acrshortpl{snr} on the output of the synchronization
     methods.
@@ -84,13 +84,13 @@ and finally the effective computational complexity.
     usable results - tagging most preambles to within a few
     samples.
 
-    For deacresing \glspl{snr} the results obtained by the
+    For decreasing \glspl{snr} the results obtained by the
     frequency sweep based method degraded rather quickly,
     already missing most
     preambles at an \gls{snr} of just $\SI{0}{\deci\bel}$
     while the other methods still provided reliable output.
 
-    The winning method in this test was the rather simple
+    The best method in this test was the rather simple
     power-level based Burst \& Silence detector, dominating
     over the more complex Schmidl \& Cox detector.
     It should be noted however that the detection hysteresis levels
@@ -131,7 +131,7 @@ and finally the effective computational complexity.
     are transmissions over frequency-selective channels
     like reflection-heavy urban areas.
 
-    Good performance in these usecases is thus also a
+    Good performance in these use-cases is thus also a
     requirement for multi-carrier synchronization systems.
 
     To characterize the performance of the synchronization
@@ -147,7 +147,7 @@ and finally the effective computational complexity.
                  {Channel models used in the simulation}
                  {0.7}{H}
 
-    The first channel was completely flat, the impulse resonse
+    The first channel was completely flat, the impulse response
     consisted of only a single pulse.
 
     The second channel roughly resembled the behavior of
@@ -188,7 +188,7 @@ and finally the effective computational complexity.
 
   As \gls{schcox} was the only method presented in this thesis
   providing a means of estimating the \gls{cfo}
-  its performance was characterized in isolation.
+  its performance was characterized separately.
 
   The test was designed as an actual-hardware test
   and used common audio hardware.
@@ -230,7 +230,7 @@ and finally the effective computational complexity.
   a criterium in the design of a \gls{schcox}
   based system.
 
-  To analyze the \gls{cfo} performance under the assumtion
+  To analyze the \gls{cfo} performance under the assumption
   of unambiguous frequency offsets the same measurements
   as in figure \ref{img:time_sync_hw_sloped} where plotted
   again, this time showing the error in frequency estimation
@@ -267,7 +267,7 @@ and finally the effective computational complexity.
   The overall processing speed of a GNURadio program
   is determined by the slowest block in the flowgraph.
   This is usually a hardware device that is limited in
-  the number of samples it produces by its samplerate.
+  the number of samples it produces by its sample rate.
 
   In the absence of hardware devices, meaning a pure
   simulation scenario, the flowgraph will run as fast
@@ -278,7 +278,7 @@ and finally the effective computational complexity.
   introduced earlier was tasked to output spurious
   \gls{schcox} sequences overlayed with gaussian noise.
 
-  This measuring source was then connect to the
+  This measuring source was then connected to the
   \gls{schcox} correlator block in series with
   the \gls{schcox} tagger block.
   The outputs of the tagger were dumped using
@@ -287,11 +287,11 @@ and finally the effective computational complexity.
 
   This program was then executed on two reasonably
   recent computers, containing \glspl{cpu} designed
-  with different usecases in mind.
+  with different use-cases in mind.
 
   The first \gls{cpu} is an AMD Ryzen 5 model intended
   for the mid-to-high range Desktop PC market where power
-  consumtion is a minor concern.
+  consumption is a minor concern.
   It provides, among others, the \acrshort{avx2} group of instructions
   that allow processing multiple values in a single processor
   instruction (\acrshort{simd}).
@@ -304,7 +304,7 @@ and finally the effective computational complexity.
   more powerful \acrshort{avx2} \acrshort{simd} instruction present
   in the Desktop \gls{cpu}. \\
 
-  The samplerates archieved in this test are shown
+  The samplerates achieved in this test are shown
   in \autoref{tab:cpuload} in the ``Benchmark samplerate''
   column.
 
@@ -336,7 +336,7 @@ and finally the effective computational complexity.
   the measuring source and the null sinks to dump the
   output samples.
 
-  This baseline figure is used to make verify that the
+  This baseline figure is used to verify that the
   processing speed is actually limited by the \gls{schcox} blocks.
   As the baseline samplerates were substantially larger
   than the bechmark rates it is relatively certain that

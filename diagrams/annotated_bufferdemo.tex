@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+  \node[anchor=south west,inner sep=0](image) at (0,0) {
+    \includegraphics[width=\linewidth]{images/gnuradio_companion_bufferdemo.png}
+  };
+
+  \begin{scope}[x={(image.south east)},y={(image.north west)}]
+    \draw
+    (0.3, 0.7) node[anchor=south]{\huge A}
+    (0.7, 0.7) node[anchor=south]{\huge B};
+  \end{scope}
+\end{tikzpicture}

@@ -12,10 +12,10 @@ be executed concurrently on multiple CPU cores by the GNURadio scheduler
 without having to fear race conditions on shared data. \\
 
 \begin{subchapter}{Buffer management and Scheduling}
-  \figurizegraphic{images/gnuradio_companion_bufferdemo.png}
-                  {img:gnuradio_companion_bufferdemo}
-                  {A minimal flowgraph to demonstrate buffer management}
-                  {0.6}{H}
+  \figurizefile{diagrams/annotated_bufferdemo.tex}
+               {img:gnuradio_companion_bufferdemo}
+               {A minimal flowgraph to demonstrate buffer management}
+               {0.6}{H}
 
   For a flowgraph as shown in figure \ref{img:gnuradio_companion_bufferdemo}
   GNURadio  allocates two internal buffers, one for the ``Signal Source'' block
@@ -23,8 +23,8 @@ without having to fear race conditions on shared data. \\
   ``Multiply Const'' block to write into and the ``Null Sink'' block to
   read from \cite{grblogbuffers}. \\
 
-  In the following diagrams the first buffer are called ``Buffer A''
-  and the second buffer will be called ``Buffer B''.
+  In the following diagrams the first buffer is called ``Buffer A''
+  and the second buffer is be called ``Buffer B''.
   The buffers in GNURadio are organized as circular buffers, this means
   that size of the occupied memory region remains constant during execution
   and that there is one pointer into the memory region where the next
@@ -78,7 +78,7 @@ without having to fear race conditions on shared data. \\
   The scheduler can not provide that many input items,
   as the input buffer is empty.
   The scheduler will then sucessively halve the number
-  of output items it requests $n_{i+1}=n_i/2$ util
+  of output items it requests $n_{i+1}=n_i/2$ until
   it determines that it can not fulfill the blocks
   input requirements ($n_{i+1}=0$). \\
 

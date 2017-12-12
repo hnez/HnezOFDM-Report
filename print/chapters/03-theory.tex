@@ -9,13 +9,13 @@ This chapter also introduces the \acrlong{schcox}
 synchronization algorithm that is later implemented
 in software.
 
-\begin{subchapter}{Single carrier transmision}
+\begin{subchapter}{Single carrier transmission}
   A classical single-carrier digital transmission standard
   usually maps digital bits to complex symbols and modulate these
   symbols at a fixed rate onto some carrier frequency. \\
 
   \autoref{img:qam4_symbol_time} presents an example of
-  a signal where six \acrshort{qam4} encoded symbols
+  a signal where six \acrshort{qpsk} encoded symbols
   are transmitted in equal time intervals.
   The symbols are shown in the complex baseband domain and a
   hypothetical filter is constructed such, that the signal
@@ -23,7 +23,7 @@ in software.
 
   \figurizefile{diagrams/qam4_symbol_time.tex}
                {img:qam4_symbol_time}
-               {\acrshort{qam4} modulated symbols over time in the complex domain}
+               {\acrshort{qpsk} modulated symbols over time in the complex domain}
                {1}{H}
 
   When only one of the complex components (real- or imaginary part)
@@ -33,20 +33,19 @@ in software.
   vertical line in the middle of the plot.
   The optimal sampling time can be found by observing the
   zero-crossings of the signal which have to happen half a
-  sybol period before or after the sampling.
-
+  symbol period before or after the sampling.
   In low noise situations, like in \autoref{img:eye_diagram},
   the modulated digital signal can be perfectly reconstructed
   when sampled at the correct points in time.
 
   \figurizegraphic{diagrams/eye_diagram.pdf}
                   {img:eye_diagram}
-                  {Eye diagram of a low noise \acrshort{qam4} signal}
+                  {Eye diagram of a low noise \acrshort{qpsk} signal}
                   {0.7}{H}
 \end{subchapter}
 
 \begin{subchapter}{Multipath propagation}
-  A phenomenom that is quite common in terristrial communications
+  A phenomenom that is quite common in terrestrial communications
   is multipath propagation.
   What this means is that a signal that was transmitted once reaches the
   receiver multiple times delayed and attenuated by differing amounts. \\
@@ -72,7 +71,7 @@ in software.
   Figure \ref{img:eye_diagram_multipath} shows the effect of the
   two delayed signals superimposing on one another on the same signal
   shown in \autoref{img:eye_diagram}.
-  The signal arriving by the longer transmission path
+  The signal arriving via the longer transmission path
   is delayed by $0.9$ symbol durations and has a magnitude
   of $\SI{10}{\percent}$, $\SI{30}{\percent}$, $\SI{50}{\percent}$ and
   $\SI{70}{\percent}$ of the original signal amplitude, respectively.
@@ -93,15 +92,15 @@ in software.
   limiting the overall data throughput.
 \end{subchapter}
 
-\begin{subchapter}{Multicarrier transmision}
-  As was already hinted at in the previous paragraph a reduction
-  in symbol rate helps mitigating the negative effects of
+\begin{subchapter}{Multicarrier transmission}
+  As was already hinted at in the previous sub-section a reduction
+  in symbol rate helps to mitigating the negative effects of
   multipath propagation but also leads to reduced datarate. \\
 
   A second positive effect of reducing the symbol rate,
-  in addition to increasing multipath resiliance is
+  in addition to increasing multipath resilience is
   a reduction of the occupied bandwith.
-  Halving the symbol rate will, in general lead to
+  Halving the symbol rate will lead to
   halve the frequency range being occupied by the
   modulated signal.
 
@@ -111,7 +110,7 @@ in software.
   transfer the same datarate while using the
   same bandwith as in the single-carrier case
   modulated at twice the symbol rate
-  while still increasing the resiliance to
+  while still increasing the resilience to
   multipath propagation. \\
 
   In order to not degrade one another the two parallel
@@ -139,11 +138,10 @@ in software.
 \end{subchapter}
 
 \begin{subchapter}{Cyclic prefix}
-  So far it was demonstrated that \gls{ofdm} is an modulation scheme
+  So far it was demonstrated that \gls{ofdm} is a modulation scheme
   that is useful to transfer high datarates over channels
   where multipath propagation would degrade the integrity of
   a single-carrier scheme. \\
-
   There are however still some issues to consider when using
   \gls{ofdm} over a multipath channel. \\
 
@@ -152,8 +150,8 @@ in software.
   as shown in figure \ref{img:ofdm_multipath}.
   In the diagram the \acrshort{ofdm} symbols $-7$ to $0$ are received
   over two paths with different delays and equal attenuation.
-  At the receiver the two signals will superinpose up leading to interference
-  between adjacent symbols.
+  At the receiver the two signals will superimpose leading
+  to interference between adjacent symbols.
 
   \figurizefile{diagrams/ofdm_multipath.tex}
                {img:ofdm_multipath}
@@ -268,7 +266,7 @@ in software.
   The left plot shows the magnitude of the output of
   the moving average, while the right plot shows its phase.
 
-  The absolute value follows a trapezoidal waveform.
+  The absolute value follows a trapezoidal shape.
   Before and after the synchronization sequence is received
   the value is nearly zero, due to the result of the complex
   conjugate multiplication of the input and its delayed version
@@ -301,7 +299,7 @@ in software.
   \end{align}
 
   The linear slopes leading to the peak are a result of the
-  correlating symbols sliding in and out of the averaging
+  correlated symbols sliding in and out of the averaging
   window.
 
   If, due to doppler shift or difference in the reference clocks,
@@ -347,6 +345,6 @@ in software.
 
 Its ability to estimate frequency offsets in addtion to producing
 exact timing synchronization between transmitters and
-receivers makes the \acrlong{schcox} algorithm especially useful
+receivers makes the \acrshort{schcox} algorithm especially useful
 in multi-carrier scenarios where carriers are spaced tightly and
 frequency offsets lead to interference between carriers.
