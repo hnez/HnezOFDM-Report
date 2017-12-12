@@ -1,1 +1,46 @@
-TODO
+This thesis demonstrates an implementation of the \acrshort{schcox}
+algorithm optimized for processing speed, contained in
+the XFDMSync \cite{xfdmsyncweb} library of GNU Radio modules. \\
+
+To demonstrate the special requirements imposed by multi-carrier
+transmission methods, namely accurate synchronization in the
+time and frequency domain and resilience against frequency-selective channcels,
+a very basic introduction to multi-carrier systems will be given.
+This introduction will cover the concepts of multipath propagation
+in radio systems, \acrshort{ofdm} and cyclic prefixes. \\
+
+To give an intuition on why advanced synchronization techniques
+are needed in multi-carrier systems a simple input power based
+synchronization method will be presented that does not fulfil the requirements
+in frequency-domain synchronization and multipath-propagation resilience.
+This sychronization method will then be compared to the \acrlong{schcox}
+algorithm, that can perform frequency-domain synchronizations and
+and has superior multipath resilience. \\
+
+Following the demonstration of the algorithms used there will be
+an introduction of GNU Radio, a free and open source \gls{sdr}
+processing framework.
+This introduction will cover the different ways of using GNU Radio,
+namely the \acrlong{grc}, the Python interface and the C++ interface,
+and how GNU Radio can be used to create signal processing graphs
+and nodes.
+An appendix on this chapter will go into more detail on how
+GNU Radio schedules its processing and how the buffer management
+is optimized for processing speed. \\
+
+Next the \acrlong{schcox} implementation written alongside
+this thesis will be presented, demonstrating some considerations
+to be made when translating the \acrshort{schcox} algorithm
+into a software implementation. \\
+
+Finally the performance of the \acrshort{schcox} implementation
+will be evaluated using a set of experiments.
+The experiments will test different aspects of the implementation.
+Firstly the accuracy of the synchronization in time in the presence
+of different disturbances, namely white noise, a frequency offset
+between transmitter and receiver and a frequency-selective channel.
+Secondly the performance of the synchronization in the frequency-domain
+over an actual channel.
+And finally the processing performance of the implementation
+in terms of maximum achieveable sample rate on common computing
+hardware. \\
