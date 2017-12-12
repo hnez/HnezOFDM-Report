@@ -39,8 +39,6 @@ perform well on a modern \acrshort{cpu}, like utilizing
                {img:sc_correlator_blocks}
                {Block diagram of the \acrlong{schcox} correlator}
                {0.6}{h}
-
-
 \end{subchapter}
 
 \begin{subchapter}{Schmidl and Cox tagger}
@@ -71,11 +69,15 @@ perform well on a modern \acrshort{cpu}, like utilizing
   threshold.
   Exactly one tag will be placed in this detection window at
   the position of the highest magnitude.
+  The sequence length parameter places a constaint onto the
+  maximum length of this detection window which is necessary
+  as the block needs to keep a copy of the samples inside the
+  window in order to be able to put a tag anywhere inside of it.
 \end{subchapter}
 
 \begin{subchapter}{Cross-correlation tagger}
-  The last detection step is used to increase the time accuracy
-  of the preamble detection and to prevent triggering on unknown
+  The last detection step is used to increase the synchronization-in-time
+  accuracy of the preamble detection and to prevent triggering on unknown
   preambles. \\
 
   It takes as inputs the sample stream that was tagged with
@@ -91,8 +93,12 @@ perform well on a modern \acrshort{cpu}, like utilizing
   the tag that triggered the check is not forwarded to the
   next block.
 
-  If the threshold is exceeded the tag is moved to the sample
-  where the cross-correlation is at maximum. \\
+  If the threshold is exceeded the tag is moved to the sample $\hat{k}_\text{new}$
+  where the cross-correlation $c(k)$ is at maximum. \\
+
+  \begin{equation*}
+    \hat{k}_\text{new}= arg\,max\left( \, \abs{c(k)} \, \right)
+  \end{equation*}
 
   \figurizefile{diagrams/xcorr_tagger_blocks.tex}
                {img:xcorr_tagger_blocks.tex}
@@ -118,7 +124,7 @@ perform well on a modern \acrshort{cpu}, like utilizing
   After the calculation of the \acrshort{ifft} the resulting cross-correlation
   contains two side lobes in addition the desired maximum.
   These side lobes are a result of the repeating nature of the preamble, as
-  discussed in \autoref{chap:intr_scsync}.
+  discussed in \autoref{sec:xcorrtheo}.
 
   To mask out these side lobes the cross-correlation is multiplied onto
   the the correlation output of the \acrlong{schcox} correlator,

@@ -1,0 +1,19 @@
+\pgfplotsset{compat=1.15}
+\setlength{\fboxsep}{0pt}
+
+\begin{tikzpicture}
+  \draw
+  (0, 3) node[anchor=west,align=center, draw, minimum size=2cm](countblk){Counting\\source}
+  (countblk.east) to[short, -*]
+  ++(2.75, 0) coordinate(cssplit) --
+  ++(0, 0.75) --
+  ++(2.75, 0) node[anchor=west,align=center, draw, minimum size=1cm](nsa){Null sink}
+  (cssplit) --
+  ++(0, -0.75) --
+  ++(2.75, 0) node[anchor=west,align=center, draw, minimum size=1cm](nsa){Null sink};
+
+  \draw[densely dotted]
+  (cssplit) ++(2.5, 1.25) coordinate(dutend)
+  (cssplit) ++(-2.5, -1.25) rectangle (dutend)
+  (cssplit) ++(0, 1.25) node[anchor=south, opacity=0.6]{DUT};
+\end{tikzpicture}

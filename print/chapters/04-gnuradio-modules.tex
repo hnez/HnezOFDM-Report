@@ -142,11 +142,15 @@ to GNU Radio and the anatomy of a GNU Radio module.
 
         Instead it contains some additional functionality to execute
         the contained flowgraph.
+
+        The behavior of this block is discussed in in more detail in the
+        apendix where the interna of GNU Radio's scheduling
+        and buffer management are presented.
     \end{description}
 
-    The rest of listing \ref{lst:gnuradio_companion_minimal}
+    \noindent The rest of listing \ref{lst:gnuradio_companion_minimal}
     performs the equivalent of the flowgraph in figure
-    \ref{img:gnuradio_companion_minimal}.
+    \ref{img:gnuradio_companion_minimal}. \\
 
     Lines \texttt{10} to \texttt{19} create instances of the
     blocks used in the flowgraph and provide them with the
@@ -161,7 +165,7 @@ to GNU Radio and the anatomy of a GNU Radio module.
                      numbersep=5pt, language=Python,
                      caption=Using GNU Radio from Python,
                      label=lst:gnuradio_companion_minimal,
-                     captionpos=b, float]
+                     captionpos=b]
                     {listings/gnuradio_companion_minimal.py}
 
   \end{subsubchapter}

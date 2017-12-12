@@ -11,14 +11,22 @@ in software.
 
 \begin{subchapter}{Single carrier transmission}
   A classical single-carrier digital transmission standard
-  usually maps digital bits to complex symbols and modulate these
+  usually maps digital bits to complex symbols from an
+  alphabet $A$ and modulate these
   symbols at a fixed rate onto some carrier frequency. \\
 
   \autoref{img:qam4_symbol_time} presents an example of
   a signal where six \acrshort{qpsk} encoded symbols
   are transmitted in equal time intervals.
+  In \acrshort{qpsk} the alphabet consists of the complex
+  symbols
+
+  \begin{equation*}
+    A = \frac{1}{\sqrt{2}} \cdot \left\{ 1+j, 1-j, -1-j, -1+j \right\} \quad .
+  \end{equation*}
+
   The symbols are shown in the complex baseband domain and a
-  hypothetical filter is constructed such, that the signal
+  hypothetical filter is constructed such that the signal
   phase is interpolated linearily between symbols.
 
   \figurizefile{diagrams/qam4_symbol_time.tex}
@@ -27,13 +35,15 @@ in software.
                {1}{H}
 
   When only one of the complex components (real- or imaginary part)
-  is observed and the continous signal is cut and overlay at symbol-length
+  is observed and the continous signal is displayed as an eye-diagram,
+  meaning it is cut and overlayed at symbol-length
   intervals, as shown in \autoref{img:eye_diagram}, one can
   immediately guess the optimal sampling time, indicated by the
   vertical line in the middle of the plot.
   The optimal sampling time can be found by observing the
   zero-crossings of the signal which have to happen half a
-  symbol period before or after the sampling.
+  symbol period before or after the sampling
+  \footnote{This is a simplified formulation of the second Nyquist criterion}.
   In low noise situations, like in \autoref{img:eye_diagram},
   the modulated digital signal can be perfectly reconstructed
   when sampled at the correct points in time.
@@ -45,7 +55,7 @@ in software.
 \end{subchapter}
 
 \begin{subchapter}{Multipath propagation}
-  A phenomenom that is quite common in terrestrial communications
+  A phenomenon that is quite common in terrestrial communications
   is multipath propagation.
   What this means is that a signal that was transmitted once reaches the
   receiver multiple times delayed and attenuated by differing amounts. \\
@@ -57,16 +67,19 @@ in software.
   Instead signals that reach the receiver do
   so by reflecting off of other objects in the scene.
 
-  In the depicted scenario there are two major paths by which signals from
-  the transmitter may reach the receiver.
-  The path in which the signal is reflected by the object on
-  the top is longer than the other path, resulting in this signal being
+  In the depicted scenario there are two macro paths by which signals from
+  the transmitter may reach the receiver, these macro paths consist of many
+  micro paths.
+  The effects of these macro paths are modeled as a combination of
+  its micro paths.
+  The macro path resulting from the reflection with the object on
+  the top is longer than the other macro path, resulting in this signal being
   delayed and attenuated by a larger amount.
 
   \figurizefile{diagrams/multipath.tex}
                {img:multipath}
                {A Multipath scenario without a direct line of sight}
-               {0.5}{H}
+               {0.5}{h}
 
   Figure \ref{img:eye_diagram_multipath} shows the effect of the
   two delayed signals superimposing on one another on the same signal
@@ -164,7 +177,7 @@ in software.
   the targeted scenario. It should usually be at least as long as the
   impulse response of the targeted channel.
   Which in terms of multipath propagation is the time difference between
-  the signal being received over the shortest path and over the longest path.
+  the signal being received over the shortest path and over the longest path\cite{kammeyer2012}.
 
   \figurizefile{diagrams/ofdm_multipath_cp.tex}
                {img:ofdm_multipath_cp}
@@ -206,6 +219,20 @@ in software.
                {img:ofdm_zero_power_sync}
                {\acrshort{ofdm} Synchronization using a null symbol}
                {0.7}{H}
+
+  The start of a frame can then be detected using
+  a method like the one shown in \autoref{eq:nulldetect},
+  where the signal power in a window before the detection point
+  is subtracted from the signal power in a window following the detection point.
+  The output $d(k)$ has a maxmimum when the window before the detection
+  point does not contain any input power (null-symbol) and
+  the window following the the detection points contains a
+  non-null symbol.
+
+  \begin{equation}
+    \label{eq:nulldetect}
+    d(k)= \sum_{n=0}^{N} \abs{x(k+n)}^2 - \sum_{n=-N}^{-1} \abs{x(k+n)}^2
+  \end{equation}
 
   While being easy to implement this method does however
   have some drawbacks.
@@ -260,7 +287,7 @@ in software.
   The simulation consists of a \gls{schcox} sequence
   that is constructed from two halves of $512$ random samples
   and a $128$ samples long \acrlong{cycpf}.
-  The signal is overlayed with \acrlong{awgn}.
+  The signal is distorted by \gls{awgn}.
   The \gls{snr} is $\SI{0}{\deci\bel}$.
 
   The left plot shows the magnitude of the output of
@@ -350,6 +377,7 @@ in multi-carrier scenarios where carriers are spaced tightly and
 frequency offsets lead to interference between carriers.
 
 \begin{subchapter}{Cross-correlation based preamble detection}
+  \label{sec:xcorrtheo}
   To further improve the accurcacy of the synchroniazion in time
   a cross-correlation based approach can be used where the cross-correlation
   between the input samples and a stored reference-preamble is

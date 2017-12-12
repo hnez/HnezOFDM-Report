@@ -36,7 +36,7 @@ and finally the effective computational complexity.
       Another custom GNURadio block that mixes the input signal
       with a repeating frequency sweep.
 
-      The synchronization sequency consists of a complementary
+      The synchronization sequenc consists of a complementary
       frequency sweep, such that the mixing of both will result
       in a constant frequency output.
 
@@ -153,7 +153,7 @@ and finally the effective computational complexity.
     The second channel roughly resembled the behavior of
     an indoor communication with a direct line of sight.
     The impulse response consisted of a large peak, representing the
-    direct line of sight, followed by gradual falloff and a
+    direct line of sight, followed by an exponentional falloff and a
     highly attenuated reflection pulse.
 
     The remaining channels were intentionally designed to
@@ -238,8 +238,8 @@ and finally the effective computational complexity.
   a criterium in the design of a \gls{schcox}
   based system.
 
-  To analyze the \gls{cfo} performance under the assumption
-  of unambiguous frequency offsets the same measurements
+  To analyze the \gls{cfo} performance, assuming unambiguous
+  frequency offsets, the same measurements
   as in figure \ref{img:time_sync_hw_sloped} where plotted
   again, this time showing the error in frequency estimation
   plotted over the actual carrier frequency.
@@ -292,6 +292,25 @@ and finally the effective computational complexity.
   The outputs of the tagger were dumped using
   null sink blocks which do not perform any processing
   on their inputs and do not produce any output.
+  A block diagram of this setup is shown in
+  \autoref{img:cpu_bm_dut}.
+
+
+  \vspace{0.5cm}
+  \begin{minipage}{.5\textwidth}
+    \figurizefile{diagrams/cpu_bm_dut.tex}
+                 {img:cpu_bm_dut}
+                 {Benchmark setup}
+                 {0.95}{H}
+  \end{minipage}%
+  \begin{minipage}{0.5\textwidth}
+    \figurizefile{diagrams/cpu_bm_baseline.tex}
+                 {img:cpu_bm_baseline}
+                 {Baseline setup}
+                 {0.95}{H}
+  \end{minipage}
+  \vspace{0.5cm}
+
 
   This program was then executed on two reasonably
   recent computers, containing \glspl{cpu} designed
@@ -342,7 +361,7 @@ and finally the effective computational complexity.
   This column contains the samplerates obtained when the flowgraph
   is executed without the \gls{schcox} blocks, leaving only
   the measuring source and the null sinks to dump the
-  output samples.
+  output samples as shown in \autoref{img:cpu_bm_baseline}. \\
 
   This baseline figure is used to verify that the
   processing speed is actually limited by the \gls{schcox} blocks.
