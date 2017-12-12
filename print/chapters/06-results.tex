@@ -184,16 +184,19 @@ and finally the effective computational complexity.
   In addition to the previously analyzed synchronization in time
   the \gls{schcox} algorithm also provides an estimation of
   the difference in carrier frequency between receiver and
-  transmitter, the \acrfull{cfo}.
+  transmitter, the \acrfull{cfo}. \\
 
   As \gls{schcox} was the only method presented in this thesis
   providing a means of estimating the \gls{cfo}
-  its performance was characterized separately.
+  its performance was characterized separately. \\
 
   The test was designed as an actual-hardware test
   and used common audio hardware.
-  A speaker and a microphone were placed on opposite
-  sides of a small room. The speaker periodically broadcasted
+  A speaker and a microphone\footnote{Due to the lack of an actual
+  microphone a headphone was used as a crude replacement}
+  were placed on opposite
+  sides of a small room an image showing the components used
+  is shown in \autoref{img:hw_chan_setup}. The speaker periodically broadcasted
   \gls{schcox} preambles consisting of two 256 symbols long
   sequences, occupying a bandwith of $\SI{4410}{\hertz}$
   around a carrier of $\SI{4000}{\hertz}$.
@@ -211,6 +214,11 @@ and finally the effective computational complexity.
   The measurements are depicted as blue dots while a
   green line shows the identity mapping between estimated
   and actual frequencies.
+
+  \figurizegraphic{images/hw_chan_setup.jpg}
+                  {img:hw_chan_setup}
+                  {Main hardware components used in the \acrshort{cfo} test}
+                  {0.6}{h}
 
   \figurizegraphic{diagrams/time_sync_hw_sloped.pdf}
                   {img:time_sync_hw_sloped}
