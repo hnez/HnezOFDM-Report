@@ -19,9 +19,12 @@ and finally the effective computational complexity.
 
   \begin{description}
     \item[Schmidl \& Cox:]
-      The \acrlong{schcox} Correlator and Tagger, as discussed in the
+      The \acrlong{schcox} correlator and tagger, as discussed in the
       previous chapters.
-      The Cross-correlation tagger component was not used in these tests.
+      The cross-correlation tagger component was not used in these tests.
+
+      The synchronization sequence used was a Zadoff-Chu sequence
+      with the parameters $N_\text{ZC}=256$, $u=47$, $q=13$.
 
     \item[Burst \& Silence:]
       A custom GNU Radio block that detects a burst in input power
@@ -36,15 +39,15 @@ and finally the effective computational complexity.
       Another custom GNU Radio block that mixes the input signal
       with a repeating frequency sweep.
 
-      The synchronization sequenc consists of a complementary
-      frequency sweep, such that the mixing of both will result
+      The synchronization sequence consists of a complementary
+      frequency sweep, such that the mixing of both results
       in a constant frequency output.
 
       The constant frequency results in a constant phase difference
-      between consecutive samples that is used for detection.
+      between consecutive samples that is utilized for detection.
   \end{description}
 
-  The algorithms were tested under these common conditions:
+  \noindent The algorithms were tested under these common conditions:
 
   \begin{itemize}
     \item
@@ -60,7 +63,7 @@ and finally the effective computational complexity.
   \end{itemize}
 
   \begin{subsubchapter}{AWGN Channel}
-    Figure \ref{img:results_time_sync_nois} shows the effect of
+    \autoref{img:results_time_sync_nois} shows the effect of
     different \acrshortpl{snr} on the output of the synchronization
     methods.
     The histograms show the distribution of tag positions
@@ -112,14 +115,14 @@ and finally the effective computational complexity.
     In this test the baseband signals containing the synchronization
     sequences were mixed up using a signal of $n\si{\percent}$ the
     baseband nyquist frequency resulting in a cyclic frequency shift.
-    The results are shown in figure \ref{img:results_time_sync_freq}.
+    The results are shown in \autoref{img:results_time_sync_freq}.
 
     \figurizefile{diagrams/results_time_sync_freq.tex}
                  {img:results_time_sync_freq}
                  {Detection time distributions for different frequency ofssets}
                  {1}{H}
 
-    Figure \ref{img:results_time_sync_freq} shows that none of the
+    \autoref{img:results_time_sync_freq} shows that none of the
     methods express any dependency on cyclic frequency shifts.
     This is to be expected as none of the methods actually use
     the absolute frequency information contained in the preambles
@@ -140,7 +143,7 @@ and finally the effective computational complexity.
     impulse responses.
 
     The frequency responses of these channels are shown
-    in the linear plots in figure \ref{img:time_sync_combat_channels}.
+    in the linear plots in \autoref{img:time_sync_combat_channels}.
 
     \figurizefile{diagrams/time_sync_combat_channels.tex}
                  {img:time_sync_combat_channels}
@@ -161,7 +164,7 @@ and finally the effective computational complexity.
     over a wide span of time.
 
     The results for the different algorithms, when used over these
-    channels, are shown in figure \ref{img:results_time_sync_chan}.
+    channels, are shown in \autoref{img:results_time_sync_chan}.
 
     \figurizefile{diagrams/results_time_sync_chan.tex}
                  {img:results_time_sync_chan}
@@ -193,15 +196,16 @@ and finally the effective computational complexity.
   The test was designed as an actual-hardware test
   and used common audio hardware.
   A speaker and a microphone\footnote{Due to the lack of an actual
-  microphone a headphone was used as a crude replacement}
-  were placed on opposite
-  sides of a small room an image showing the components used
+  microphone a headphone, connect to the microphone jack of a sound card,
+  was used as a crude replacement}
+  were placed on opposite sides of a small room.
+  An image showing the components used
   is shown in \autoref{img:hw_chan_setup}. The speaker periodically broadcasted
   \gls{schcox} preambles consisting of two 256 symbols long
   sequences, occupying a bandwith of $\SI{4410}{\hertz}$
   around a carrier of $\SI{4000}{\hertz}$.
   These preambles were received by the microphone and mixed
-  down by an LO-frequency between $\SI{3985}{\hertz}$ and $\SI{4015}{\hertz}$
+  down by an LO-frequency between $\SI{3985}{\hertz}$ and $\SI{4015}{\hertz}$,
   the \gls{schcox} algorithm was then used to estimate
   this carrier-frequency offset of $\pm\SI{15}{\hertz}$.
 
@@ -213,7 +217,7 @@ and finally the effective computational complexity.
   The playback volume was adjusted to the lowest level
   that still provided reliable preamble detection at the receiver.
 
-  The results are shown in figure \ref{img:time_sync_hw_sloped},
+  The results are shown in \autoref{img:time_sync_hw_sloped},
   which depicts the estimated LO-frequencies over the
   actual LO-frequencies used to mix down the signal.
   The measurements are depicted as blue dots while a
@@ -240,11 +244,11 @@ and finally the effective computational complexity.
 
   To analyze the \gls{cfo} performance, assuming unambiguous
   frequency offsets, the same measurements
-  as in figure \ref{img:time_sync_hw_sloped} where plotted
+  as in \autoref{img:time_sync_hw_sloped} where plotted
   again, this time showing the error in frequency estimation
   plotted over the actual carrier frequency.
   The resulting diagram is shown in
-  figure \ref{img:time_sync_hw_horiz}.
+  \autoref{img:time_sync_hw_horiz}.
   The values were clipped to a range of $[-2, 2]$.
 
   \figurizegraphic{diagrams/time_sync_hw_horiz.pdf}
@@ -269,12 +273,12 @@ and finally the effective computational complexity.
   To test the processing speed of the
   \gls{schcox} correlator and -tagger blocks
   a custom GNU Radio block was implemented that repeatedly outputs
-  a preset sequence over and over while keeping
+  a preset sequence of symbols over and over, while keeping
   track of the number of samples produced per unit of time. \\
 
   The overall processing speed of a GNU Radio program
-  is determined by the slowest block in the flowgraph.
-  This is usually a hardware device that is limited in
+  is determined by the slowest block in the flowgraph,
+  this is usually a hardware device that is limited in
   the number of samples it produces by its sample rate.
 
   In the absence of hardware devices, meaning a pure
@@ -284,7 +288,7 @@ and finally the effective computational complexity.
 
   For this test the custom speed measuring block
   introduced earlier was tasked to output spurious
-  \gls{schcox} sequences overlayed with gaussian noise.
+  \gls{schcox} sequences disturbed by gaussian noise.
 
   This measuring source was then connected to the
   \gls{schcox} correlator block in series with
@@ -316,18 +320,18 @@ and finally the effective computational complexity.
   recent computers, containing \glspl{cpu} designed
   with different use-cases in mind.
 
-  The first \gls{cpu} is an AMD Ryzen 5 model intended
+  The first \gls{cpu} was an AMD Ryzen 5 model intended
   for the mid-to-high range Desktop PC market where power
   consumption is a minor concern.
   It provides, among others, the \acrshort{avx2} group of instructions
   that allow processing multiple values in a single processor
   instruction (\acrshort{simd}).
 
-  The second \gls{cpu} is an Intel Atom model intended
+  The second \gls{cpu} was an Intel Atom model intended
   for very low power laptop and tablet computers.
   To reduce the power consumption and die-area
   of this \gls{cpu} only the SSE to \acrshort{sse42} line of
-  instructions were implemented instead of the
+  \acrshort{SIMD} instructions were implemented instead of the
   more powerful \acrshort{avx2} \acrshort{simd} instruction present
   in the Desktop \gls{cpu}. \\
 
@@ -361,11 +365,11 @@ and finally the effective computational complexity.
   This column contains the samplerates obtained when the flowgraph
   is executed without the \gls{schcox} blocks, leaving only
   the measuring source and the null sinks to dump the
-  output samples as shown in \autoref{img:cpu_bm_baseline}. \\
+  output samples, as shown in \autoref{img:cpu_bm_baseline}. \\
 
-  This baseline figure is used to verify that the
-  processing speed is actually limited by the \gls{schcox} blocks.
-  As the baseline samplerates were substantially larger
+  This baseline figure was used to verify that the
+  processing speed is actually limited by the \gls{schcox} blocks,
+  as the baseline samplerates were substantially larger
   than the bechmark rates it is relatively certain that
   the processing speed was indeed limited by the \gls{schcox} blocks
   and the measured performance was a characteristic of these blocks. \\

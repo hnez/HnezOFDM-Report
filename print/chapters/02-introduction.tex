@@ -1,6 +1,7 @@
 This thesis demonstrates an implementation of the \acrshort{schcox}
 algorithm optimized for processing speed, contained in
-the XFDMSync \cite{xfdmsyncweb} library of GNU Radio modules. \\
+the XFDMSync\cite{xfdmsyncweb} library of GNU Radio modules
+that was written as part of this thesis. \\
 
 To demonstrate the special requirements imposed by multi-carrier
 transmission methods, namely accurate synchronization in the
@@ -13,8 +14,9 @@ To give an intuition on why advanced synchronization techniques
 are needed in multi-carrier systems a simple input power based
 synchronization method will be presented that does not fulfil the requirements
 in frequency-domain synchronization and multipath-propagation resilience.
-This sychronization method will then be compared to the \acrlong{schcox}
-algorithm, that can perform frequency-domain synchronizations and
+This synchronization method will then be compared to the \acrlong{schcox}
+algorithm, that can, in addtion to providing synchronization in
+the time domain, perform frequency-domain synchronizations and
 and has superior multipath resilience. \\
 
 Following the demonstration of the algorithms used there will be
@@ -30,17 +32,17 @@ is optimized for processing speed. \\
 
 Next the \acrlong{schcox} implementation written alongside
 this thesis will be presented, demonstrating some considerations
-to be made when translating the \acrshort{schcox} algorithm
-into a software implementation. \\
+made while translating the \acrshort{schcox} algorithm
+into a fast software implementation. \\
 
 Finally the performance of the \acrshort{schcox} implementation
 will be evaluated using a set of experiments.
 The experiments will test different aspects of the implementation.
-Firstly the accuracy of the synchronization in time in the presence
-of different disturbances, namely white noise, a frequency offset
+Firstly the accuracy of the synchronization in time, in the presence
+of different disturbances, namely white gaussian noise, a frequency offset
 between transmitter and receiver and a frequency-selective channel.
 Secondly the performance of the synchronization in the frequency-domain
-over an actual channel.
+will be tested in a hardware test over an actual channel.
 And finally the processing performance of the implementation
-in terms of maximum achieveable sample rate on common computing
+in terms of maximum achievable sample rate on common computing
 hardware. \\

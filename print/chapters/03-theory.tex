@@ -7,13 +7,13 @@ a focus on synchronization. \\
 
 This chapter also introduces the \acrlong{schcox}
 synchronization algorithm that is later implemented
-in software.
+in software and some aspects of the preamble design.
 
 \begin{subchapter}{Single carrier transmission}
   A classical single-carrier digital transmission standard
   usually maps digital bits to complex symbols from an
   alphabet $A$ and modulate these
-  symbols at a fixed rate onto some carrier frequency. \\
+  symbols at a fixed rate onto a carrier frequency. \\
 
   \autoref{img:qam4_symbol_time} presents an example of
   a signal where six \acrshort{qpsk} encoded symbols
@@ -58,11 +58,11 @@ in software.
   A phenomenon that is quite common in terrestrial communications
   is multipath propagation.
   What this means is that a signal that was transmitted once reaches the
-  receiver multiple times delayed and attenuated by differing amounts. \\
+  receiver multiple times, delayed and attenuated by differing amounts. \\
 
   \autoref{img:multipath} shows a simplified multipath propagation example.
   In this example the transmitter does not have a direct line of
-  sight to the receiver due to an object in the middle of the scene,
+  sight to the receiver, due to an object in the middle of the scene,
   so signal rays may not propagate directly between transmitter and receiver.
   Instead signals that reach the receiver do
   so by reflecting off of other objects in the scene.
@@ -70,8 +70,8 @@ in software.
   In the depicted scenario there are two macro paths by which signals from
   the transmitter may reach the receiver, these macro paths consist of many
   micro paths.
-  The effects of these macro paths are modeled as a combination of
-  its micro paths.
+  The effects of the macro paths are modeled as a combination of
+  the micro paths it consists of.
   The macro path resulting from the reflection with the object on
   the top is longer than the other macro path, resulting in this signal being
   delayed and attenuated by a larger amount.
@@ -82,8 +82,8 @@ in software.
                {0.5}{h}
 
   Figure \ref{img:eye_diagram_multipath} shows the effect of the
-  two delayed signals superimposing on one another on the same signal
-  shown in \autoref{img:eye_diagram}.
+  two delayed signals superimposing on one another, on the same signal
+  as shown in \autoref{img:eye_diagram}.
   The signal arriving via the longer transmission path
   is delayed by $0.9$ symbol durations and has a magnitude
   of $\SI{10}{\percent}$, $\SI{30}{\percent}$, $\SI{50}{\percent}$ and
@@ -92,14 +92,15 @@ in software.
   \figurizefile{diagrams/eye_diagram_multipath.tex}
                {img:eye_diagram_multipath}
                {Eye diagrams}
-               {0.9}{H}
+               {0.9}{h}
 
   With increasing amplitude of the superimposed signal the optimal
   sampling points and zero crossings used for clock recovery
   become less and less obvious.
-  An easy way to reduce the effects of multipath propagation is to
+  A simple method to reduce the negative effects of multipath propagation is to
   increase the symbol durations, reducing the relative shift between
-  the differently delayed signals.
+  the differently delayed signals, leading to a less
+  distorted output.
 
   But doing so does obviously reduce the data rate,
   limiting the overall data throughput.
@@ -107,22 +108,22 @@ in software.
 
 \begin{subchapter}{Multi-carrier transmission}
   As was already hinted at in the previous sub-section a reduction
-  in symbol rate helps to mitigating the negative effects of
+  in symbol rate helps mitigating the negative effects of
   multipath propagation but also leads to reduced datarate. \\
 
   A second positive effect of reducing the symbol rate,
   in addition to increasing multipath resilience is
   a reduction of the occupied bandwith.
-  Halving the symbol rate will lead to
-  halve the frequency range being occupied by the
+  Halving the symbol rate leads to
+  half the frequency range being occupied by the
   modulated signal.
 
-  If one were to fill this freed bandwith with a
+  If one were to fill this newly freed bandwith with a
   second signal of equal bandwith without
   degrading the original signal one could
-  transfer the same datarate while using the
+  transfer the same datarate while utilizing the
   same bandwith as in the single-carrier case
-  modulated at twice the symbol rate
+  modulated at twice the symbol rate,
   while still increasing the resilience to
   multipath propagation. \\
 
@@ -139,7 +140,7 @@ in software.
 
   \begin{equation}
     \label{eq:ifftsynth}
-    x(t) = \sum_{i=0}^{N-1} s_{i} \cdot e ^ {2\pi j \cdot \frac{it}{N}}
+    x(k) = \sum_{i=0}^{N-1} s_{i} \cdot e ^ {2\pi j \cdot \frac{ik}{N}}
   \end{equation}
 
   The resulting time-domain signal can then be modulated onto
@@ -163,20 +164,20 @@ in software.
   as shown in figure \ref{img:ofdm_multipath}.
   In the diagram the \acrshort{ofdm} symbols $-7$ to $0$ are received
   over two paths with different delays and equal attenuation.
-  At the receiver the two signals will superimpose leading
+  At the receiver the two signals will superimpose, leading
   to interference between adjacent symbols.
 
   \figurizefile{diagrams/ofdm_multipath.tex}
                {img:ofdm_multipath}
-               {\acrshort{ofdm} multipath without guard interval}
+               {\acrshort{ofdm} multipath propagation without guard interval}
                {0.7}{H}
 
   To prevent interference between subsequent symbols a guard interval has
   to be introduced to separate them, as shown in figure \ref{img:ofdm_multipath}.
   The length of the guard interval has to be designed according to
-  the targeted scenario. It should usually be at least as long as the
-  impulse response of the targeted channel.
-  Which in terms of multipath propagation is the time difference between
+  the targeted scenario, it should usually be at least as long as the
+  impulse response of the targeted channel,
+  which in terms of multipath propagation is the time difference between
   the signal being received over the shortest path and over the longest path\cite{kammeyer2012}.
 
   \figurizefile{diagrams/ofdm_multipath_cp.tex}
@@ -197,8 +198,8 @@ in software.
   may be performed as easily as observing zero-crossings in the
   timedomain to detect symbol transitions.
   In a multi-carrier system the actual sub-carriers are not available
-  at the receiver prior to fourier-transformation to the
-  frequency domain, thus synchronization has to be performed
+  at the receiver prior to fourier-transformation,
+  thus synchronization has to be performed
   differently. \\
 
   One method to synchronize a receiver to a continuous stream
@@ -208,7 +209,7 @@ in software.
 
   An example of such a symbol stream is shown in
   \autoref{img:ofdm_zero_power_sync}.
-  To synchronize to the symbol stream the receiver has
+  To synchronize onto the symbol stream the receiver has
   to monitor the received input power for dips with a
   length of one symbol duration. \\
 
@@ -222,10 +223,10 @@ in software.
 
   The start of a frame can then be detected using
   a method like the one shown in \autoref{eq:nulldetect},
-  where the signal power in a window before the detection point
-  is subtracted from the signal power in a window following the detection point.
+  where the signal energy in a window before the detection point
+  is subtracted from the signal energy in a window following the detection point.
   The output $d(k)$ has a maxmimum when the window before the detection
-  point does not contain any input power (null-symbol) and
+  point does not contain any input energy (null-symbol) and
   the window following the the detection points contains a
   non-null symbol.
 
@@ -260,13 +261,14 @@ in software.
   The gist of how a Schmidl \& Cox synchronization sequence
   is introduced into a stream of \gls{ofdm}-symbols is
   shown in \autoref{img:ofdm_sc_sync}.
-  The Schmidl \& Cox sequence consists of a complex sequence
+  In this example the Schmidl \& Cox sequence
+  consists of a complex sequence
   of half a symbol length that is sent twice, back-to-back,
   as shown in \autoref{img:ofdm_sc_sync}.
 
   \figurizefile{diagrams/ofdm_sc_sync.tex}
                {img:ofdm_sc_sync}
-               {\acrshort{ofdm} Synchronization using a Schmidl \& Cox symbol}
+               {Introduction of a \acrlong{schcox} preamble}
                {0.7}{H}
 
   The detection of the repeated sequence at the receiver works by delaying
@@ -326,20 +328,20 @@ in software.
   \end{align}
 
   The linear slopes leading to the peak are a result of the
-  correlated symbols sliding in and out of the averaging
-  window.
+  correlated symbols sliding into and out of the averaging
+  window. \\
 
-  If, due to doppler shift or difference in the reference clocks,
-  there is a offset frequency $\Delta f$ superimposed on the
-  synchronization sequence $s'$ where the sampling frequency is $f_s$.
+  If, due to doppler shift or a difference in the reference clocks,
+  there is a offset frequency $\Delta f$ superimposed onto the
+  synchronization sequence $s'$ where the sampling frequency is $f_s$
 
   \begin{equation*}
     s'_{i}= s_{i} \cdot e^{j\cdot 2 \pi \frac{\Delta f}{f_s}i}
   \end{equation*}
 
-  When ignoring the noise component of the input signal $x$ the
+  and if the component of the input signal $x$ is ignored the
   block diagram in \autoref{img:sc_detector_blocks} can
-  now be described by \autoref{eq:sc_peak_fqoff}.
+  now be described by the new \autoref{eq:sc_peak_fqoff}.
 
   \begin{align}
     \label{eq:sc_peak_fqoff}
@@ -359,7 +361,7 @@ in software.
     \arg{x} = 2 \pi \frac{\Delta f}{f_s} \frac{N}{2} \implies \Delta f = \frac{f_s}{N \pi} \arg{x}
   \end{equation*}
 
-  The magnitude and phase of the output values for a simulation with a
+  The magnitude and phase of the output values for a simulation with
   frequency offset can be seen in figure \ref{img:sc_detector_output_fqoff}.
   For the given frequency offset the magnitude is largely unaffected but
   the phase is now non-zero.
@@ -378,8 +380,8 @@ frequency offsets lead to interference between carriers.
 
 \begin{subchapter}{Cross-correlation based preamble detection}
   \label{sec:xcorrtheo}
-  To further improve the accurcacy of the synchroniazion in time
-  a cross-correlation based approach can be used where the cross-correlation
+  To further improve the accurcacy of the synchronization in time
+  a cross-correlation based approach can be used, where the cross-correlation
   between the input samples and a stored reference-preamble is
   calculated.
   A flow diagram and an exemplary output of a cross-correlation
@@ -391,10 +393,10 @@ frequency offsets lead to interference between carriers.
                {Improved synchronization in time using cross- and auto-correlation}
                {1}{H}
 
-  In addition to the center peak the cross-correlation output
+  In addition to the central peak the cross-correlation output
   in \autoref{img:xcorr_theory} also shows two additional side-peaks.
-  These side-peaks occur half the preamble length left and right
-  of the main-peak and are a result of the repeating nature of
+  These side-peaks occur half a preamble length before and after
+  the main peak and are a result of the repeating nature of
   the preamble. \\
 
   A method to suppress these side-peaks is to use the auto-correlation
@@ -402,18 +404,18 @@ frequency offsets lead to interference between carriers.
   output of the cross-correlation\cite{awoseyila}.
 
   This effectively masks out the side-peaks and leads to an output as
-  shown in the rightmost diagram in \autoref{img:xcorr_theory} containing
+  shown in the rightmost sub-diagram in \autoref{img:xcorr_theory} containing
   a single sharp peak that can be used to accurately synchronize
   onto the preamble.
 \end{subchapter}
 
 \begin{subchapter}{CAZAC sequences}
-  In order for the cross-correlation based synchronization technique
-  introduced in the previous subsection to work optimally the
+  In order for the cross-correlation based synchronization technique,
+  introduced in the previous subsection, to work optimally the
   autocorrelation of the preamble should be minimal for time-offsets $\Delta t$
   where $\abs{\Delta t} \neq \frac{N}{2}$. \\
 
-  A class of sequences where this requirement is fulfiled are
+  A class of sequences where this requirement is fulfilled are
   \gls{cazac} waveforms.
   One class of sequences in this \gls{cazac} class are
   Zadoff-Chu sequences\cite{zadoffchu},
@@ -432,4 +434,9 @@ frequency offsets lead to interference between carriers.
   So if one constructs a \gls{schcox} preamble by repeating
   a \gls{cazac} sequence the autocorrelation is
   zero for $\abs{\Delta t} \neq \frac{N}{2}$.
+
+  Another useful property of \gls{cazac} sequences is
+  the their constant amplitude over time
+  which is useful for example in the design
+  of \gls{agc} hardware.
 \end{subchapter}
