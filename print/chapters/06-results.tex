@@ -1,4 +1,4 @@
-In order to analyze the performance of the GNURadio blocks
+In order to analyze the performance of the GNU Radio blocks
 discussed earlier a set of testcases were devised.
 
 The metrics that the testcases were designed to test
@@ -24,7 +24,7 @@ and finally the effective computational complexity.
       The Cross-correlation tagger component was not used in these tests.
 
     \item[Burst \& Silence:]
-      A custom GNURadio block that detects a burst in input power
+      A custom GNU Radio block that detects a burst in input power
       followed by an equally long period of silence by calculating the
       average signal power in two consecutive windows and subtracting the
       energy in the later window from the energy of the earlier window.
@@ -33,7 +33,7 @@ and finally the effective computational complexity.
       and is thus canceled out.
 
     \item[Frequency Sweep:]
-      Another custom GNURadio block that mixes the input signal
+      Another custom GNU Radio block that mixes the input signal
       with a repeating frequency sweep.
 
       The synchronization sequenc consists of a complementary
@@ -268,11 +268,11 @@ and finally the effective computational complexity.
 
   To test the processing speed of the
   \gls{schcox} correlator and -tagger blocks
-  a custom GNURadio block was implemented that repeatedly outputs
+  a custom GNU Radio block was implemented that repeatedly outputs
   a preset sequence over and over while keeping
   track of the number of samples produced per unit of time. \\
 
-  The overall processing speed of a GNURadio program
+  The overall processing speed of a GNU Radio program
   is determined by the slowest block in the flowgraph.
   This is usually a hardware device that is limited in
   the number of samples it produces by its sample rate.

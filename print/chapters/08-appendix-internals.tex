@@ -1,14 +1,14 @@
 As the code samples in \autoref{lst:gnuradio_companion_minimal}
-and \autoref{lst:square_cc} show, GNURadio blocks do not have to
+and \autoref{lst:square_cc} show, GNU Radio blocks do not have to
 perform any buffer management themselves to handle the streaming
 input and output ports. \\
 
 The buffer management and scheduling of when to execute the processing
-block is instead handled internally by GNURadio.
+block is instead handled internally by GNU Radio.
 As the processing blocks are only allowed to communicate with
 other blocks using the previously discussed input and output ports
 and a, not yet discussed, message passing interface they can also
-be executed concurrently on multiple CPU cores by the GNURadio scheduler
+be executed concurrently on multiple CPU cores by the GNU Radio scheduler
 without having to fear race conditions on shared data. \\
 
 \begin{subchapter}{Buffer management and scheduling}
@@ -18,14 +18,14 @@ without having to fear race conditions on shared data. \\
                {0.6}{H}
 
   For a flowgraph as shown in figure \ref{img:gnuradio_companion_bufferdemo}
-  GNURadio  allocates two internal buffers, one for the ``Signal Source'' block
+  GNU Radio  allocates two internal buffers, one for the ``Signal Source'' block
   to write into and the ``Multiply Const'' block to read from and one for the
   ``Multiply Const'' block to write into and the ``Null Sink'' block to
   read from \cite{grblogbuffers}. \\
 
   In the following diagrams the first buffer is called ``Buffer A''
   and the second buffer is be called ``Buffer B''.
-  The buffers in GNURadio are organized as circular buffers, this means
+  The buffers in GNU Radio are organized as circular buffers, this means
   that size of the occupied memory region remains constant during execution
   and that there is one pointer into the memory region where the next
   values are to be written (\texttt{write\_ptr}) and one or more
@@ -48,7 +48,7 @@ without having to fear race conditions on shared data. \\
                {Initial state of the two buffers}
                {0.7}{H}
 
-  The GNURadio scheduler tries to keep all the buffers filled
+  The GNU Radio scheduler tries to keep all the buffers filled
   and will execute blocks until every buffer is filled.
   Blocks that depend on input to process like the ``Multiply Const''
   or ``Null Sink'' block in the example can not be executed
@@ -171,7 +171,7 @@ without having to fear race conditions on shared data. \\
                {Scheduling twice to prevent overflowing}
                {0.7}{H}
 
-  GNURadio uses another approach, it instructs the operating system
+  GNU Radio uses another approach, it instructs the operating system
   to map the buffer twice into the address space of the program,
   right after one another \cite{grrdbufmmap}.
 
