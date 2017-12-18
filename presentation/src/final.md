@@ -1,5 +1,5 @@
 
-_Implementation and Analysis of Multi-Carrier Synchronization Techniques_
+_Implementation and Analysis of<br/>Multi-Carrier Synchronization<br/>Techniques_
 
 ---
 
@@ -238,6 +238,15 @@ Throughput
 ![Throughput table](diagrams/speed_cmp_tab.svg)
 
 Usable for WiFi on a Desktop PC
+
+---
+
+Throughput
+==========
+
+![Htop CPU measurement](images/benchmark_htop.png)
+
+S&C components do not use more than two CPU cores
 
 ---
 
