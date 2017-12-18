@@ -1,7 +1,11 @@
 DIAGRAM_FILES := $(wildcard ../../../diagrams/*.tex)
+PREGEN_FILES := $(wildcard ../../../diagrams/*.pdf)
+
 RENDER_FILES := $(subst ../../../diagrams/, , $(patsubst %.tex, %.render.tex, $(DIAGRAM_FILES)))
+
 PDF_FILES := $(patsubst %.render.tex, %.pdf, $(RENDER_FILES))
 SVG_FILES := $(patsubst %.pdf, %.svg, $(PDF_FILES))
+SVG_FILES += $(subst ../../../diagrams/, , $(patsubst %.pdf, %.svg, $(PREGEN_FILES)))
 
 LUALATEX= lualatex
 LATEXRUN= ./latexrun
@@ -18,6 +22,7 @@ all: ${SVG_FILES}
 	$(file >> $(@),\usepackage{amsmath})
 	$(file >> $(@),\usepackage{varwidth})
 	$(file >> $(@),\usepackage{siunitx})
+	$(file >> $(@),\DeclareSIUnit{\sample}{S})
 	$(file >> $(@),\usepackage{verbatim})
 	$(file >> $(@),\usepackage[usenames,dvipsnames]{xcolor})
 	$(file >> $(@),\usepackage{bm})
@@ -32,6 +37,9 @@ all: ${SVG_FILES}
 
 %.pdf: %.render.tex
 	${LATEXRUN} --latex-cmd ${LUALATEX} $(<) -o $(@)
+
+%.svg: ../../../diagrams/%.pdf
+	pdf2svg $(<) $(@)
 
 %.svg: %.pdf
 	pdf2svg $(<) $(@)

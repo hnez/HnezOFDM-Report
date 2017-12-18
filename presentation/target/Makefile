@@ -18,4 +18,4 @@ all: $(NOTES) $(SLIDES)
 
 .PHONY: public
 public: all
-	rsync -av . tut@zerforscht.de:public_html/bap
+	rsync -av . tut@zerforscht.de:public_html/ba
