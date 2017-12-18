@@ -42,6 +42,8 @@ Preamble
 
 ![S&C preamble](diagrams/ofdm_sc_sync.svg)
 
+Twice the same sequence back-to-back
+
 ---
 
 Detection
@@ -169,13 +171,19 @@ Compared to …
 
 <img src="diagrams/results_time_sync_nois_min.svg" style="height: 75vh; width: 80vw;" />
 
+AWGN
+
 ---
 
 <img src="diagrams/results_time_sync_freq.svg" style="height: 75vh; width: 80vw;" />
 
+Frequency shift
+
 ---
 
 <img src="diagrams/results_time_sync_chan.svg" style="height: 75vh; width: 80vw;" />
+
+Frequency selective channel
 
 ---
 
@@ -193,7 +201,7 @@ Synchronization in frequency
 
 ![CFO Result](diagrams/time_sync_hw_sloped.svg)
 
-CFO estimation is not unique
+Frequency offset to phase mapping is not unique
 
 ---
 
